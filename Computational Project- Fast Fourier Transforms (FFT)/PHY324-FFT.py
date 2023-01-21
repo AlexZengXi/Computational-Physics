@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
 """
 Created on Wed Oct 25 13:53:25 2017
-
 @author: Brian
+
+Alex Zeng, 1007099373, Jan 20th 2023
 """
 
 save=False # if True then we save images as files
@@ -85,7 +86,7 @@ ax3.set_ylabel('Same Wave With Noise')
 mydpi=300
 plt.tight_layout()
 
-if (save): plt.savefig('SingleWaveAndNoiseWithFFT.png',dpi=mydpi)
+if (save): plt.savefig('ex2_SingleWaveAndNoiseWithFFT.png',dpi=mydpi)
 plt.show()
 """
 plt.show() displays the graph on your computer
@@ -145,7 +146,7 @@ the \n in our xlabel does not save to file well without the
 tight_layout() command
 """
 
-if(save): plt.savefig('FilteringProcess.png',dpi=mydpi)
+if(save): plt.savefig('ex2_FilteringProcess.png',dpi=mydpi)
 plt.show()
 
 cleaned=np.fft.ifft(z_filtered)
@@ -181,5 +182,5 @@ ax2.set_ylabel('Filtered Data')
 ax3.set_ylabel('Ideal Result')
 ax3.set_xlabel('Position-Time')
 
-if(save): plt.savefig('SingleWaveAndNoiseFFT.png',dpi=mydpi)
+if(save): plt.savefig('ex2_SingleWaveAndNoiseFFT.png',dpi=mydpi)
 plt.show()
