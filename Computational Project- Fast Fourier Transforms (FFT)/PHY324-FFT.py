@@ -11,6 +11,7 @@ from random import gauss
 import matplotlib.pyplot as plt
 import numpy as np
 
+
 N=200   # N is how many data points we will have in our sine wave
 
 time=np.arange(N)
