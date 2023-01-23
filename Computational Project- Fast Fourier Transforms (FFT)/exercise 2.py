@@ -5,10 +5,10 @@ Created on Wed Oct 25 13:53:25 2017
 
 Alex Zeng, 1007099373, Jan 20th 2023
 """
-from numpy import imag
+from numpy import imag, mean
 from numpy.fft import fftfreq
 
-save=False # if True then we save images as files
+save=True # if True then we save images as files
 
 from random import gauss
 import matplotlib.pyplot as plt
@@ -81,8 +81,10 @@ print("w1: max frequency is ", np.argmax(abs(z2[0:100])),
 
 M=len(z2)       # length of x, with noise
 freq=np.arange(M)  # frequency values, like time is the time values
-width=0.1  # width=2*sigma**2 where sigma is the standard deviation
+width= 2*(np.std(z2)/max(abs(z2)))**2  # width=2*sigma**2 where sigma is the standard deviation
 peak=12    # ideal value is approximately N/T1
+
+print("std", width)
 
 filter_function=(np.exp(-(freq-peak)**2/width)+np.exp(-(freq+peak-M)**2/width))
 z_filtered = z2 * filter_function
