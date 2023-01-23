@@ -81,13 +81,13 @@ print("w1: max frequency is ", np.argmax(abs(z2[0:100])),
 
 M=len(z2)       # length of x, with noise
 freq=np.arange(M)  # frequency values, like time is the time values
-width= 2*(np.std(z2)/max(abs(z2)))**2  # width=2*sigma**2 where sigma is the standard deviation
+width= 0.001  # width=2*sigma**2 where sigma is the standard deviation
 peak=12    # ideal value is approximately N/T1
 
 print("std", width)
 
 filter_function=(np.exp(-(freq-peak)**2/width)+np.exp(-(freq+peak-M)**2/width))
-z_filtered = z2 * filter_function
+z_filtered = abs(z2) * filter_function
 """
 we choose Gaussian filter functions, fairly wide, with
 one peak per spike in our FFT graph
@@ -148,7 +148,7 @@ to get our "cleaned" version of the original data
 fig, (ax1,ax2,ax3)=plt.subplots(3,1,sharex='col',sharey='col')
 ax1.plot(time/N,x)
 ax2.plot(time/N,np.real(cleaned))
-ax3.plot(time/N,y-np.real(cleaned))
+ax3.plot(time/N,y)
 """
 we plot the real part of our cleaned data - but since the 
 original data was real, the result of our tinkering should 

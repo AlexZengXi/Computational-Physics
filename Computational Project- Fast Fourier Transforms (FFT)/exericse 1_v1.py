@@ -33,11 +33,11 @@ z3=np.fft.fft(z)
 fig, ( (ax1,ax2), (ax3,ax4), (ax5,ax6) ) = plt.subplots(3,2,sharex='col',sharey='col')
 
 # ploting the graphs
-ax1.plot(time/N,x)
+ax1.plot(time,x)
 ax2.plot(np.abs(z1))
-ax3.plot(time/N,y)
+ax3.plot(time,y)
 ax4.plot(np.abs(z2))
-ax5.plot(time/N,z)
+ax5.plot(time,z)
 ax6.plot(np.abs(z3))
 
 # remove the horizontal space between the top and bottom row
@@ -63,7 +63,7 @@ n1 = len(x)
 n2 = len(y)
 n3 = len(z)
 
-delta = 1/N
+delta = 1
 # Calculate frequencies of the transform in Hz
 freq1 = fftfreq(n1, delta)
 freq2 = fftfreq(n2, delta)
@@ -107,19 +107,16 @@ w1 = 2 * np.pi * freq1      # Convert to angular frequencies
 print("w1: max frequency is ", np.argmax(abs(z2)),
       "with the amplitude being ",  max(abs(z2)))
 """
-
-print("w1: max frequency is ", w1[np.argmax(imag(z1))],
-      "with the imaginary value being ", imag(z1).max())
-print("w2: max frequency is ", w2[np.argmax(imag(z2))],
-      "with the imaginary value being ", imag(z2).max())
-print("w3: max frequency is ", w3[np.argmax(imag(z3))],
-      "with the imaginary value being ", imag(z3).max())
+#
+# print("w1: max frequency is ", w1[np.argmax(imag(z1))],
+#       "with the imaginary value being ", imag(z1).max())
+# print("w2: max frequency is ", w2[np.argmax(imag(z2))],
+#       "with the imaginary value being ", imag(z2).max())
+# print("w3: max frequency is ", w3[np.argmax(imag(z3))],
+#       "with the imaginary value being ", imag(z3).max())
 
 mydpi=800
 plt.tight_layout()
 
 if (save): plt.savefig('ex1_TwoWavesCombineWithFFT_MaxFreq.png',dpi=mydpi)
 plt.show()
-
-
-# END OF THE EXERCISE 1 SECTION
