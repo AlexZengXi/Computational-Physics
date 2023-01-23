@@ -58,6 +58,8 @@ plt.tight_layout()
 if (save): plt.savefig('ex1_TwoWavesCombineWithFFT.png',dpi=mydpi)
 plt.show()
 
+############################################################################################
+
 # calculating the frequencies
 n1 = len(x)
 n2 = len(y)
