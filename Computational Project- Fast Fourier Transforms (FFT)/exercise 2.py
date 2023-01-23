@@ -84,10 +84,8 @@ freq=np.arange(M)  # frequency values, like time is the time values
 width= 0.001  # width=2*sigma**2 where sigma is the standard deviation
 peak=12    # ideal value is approximately N/T1
 
-print("std", width)
-
 filter_function=(np.exp(-(freq-peak)**2/width)+np.exp(-(freq+peak-M)**2/width))
-z_filtered = abs(z2) * filter_function
+z_filtered = z2 * filter_function
 """
 we choose Gaussian filter functions, fairly wide, with
 one peak per spike in our FFT graph

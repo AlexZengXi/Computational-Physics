@@ -93,11 +93,11 @@ freq1 = fftfreq(n1, delta)
 w1 = 2 * np.pi * freq1      # Convert to angular frequencies
 
 print("w1: max frequency is ", np.argmax(abs(data_fft[0:2000])),
-      "with the amplitude being ",  max(abs(data_fft[0:2000])))
+      "with the power being ",  max(abs(data_fft[0:2000])))
 print("w1: max frequency is ", np.argmax(abs(data_fft[0:280])),
-      "with the amplitude being ",  max(abs(data_fft[0:280])))
+      "with the power being ",  max(abs(data_fft[0:280])))
 print("w1: max frequency is ", np.argmax(abs(data_fft[0:150])),
-      "with the amplitude being ",  max(abs(data_fft[0:150])))
+      "with the power being ",  max(abs(data_fft[0:150])))
 
 
 M=len(data_fft)       # length of x, with noise
