@@ -75,17 +75,17 @@ delta = 1/N     # Calculate frequencies of the transform in Hz
 n1 = len(x)
 freq1 = fftfreq(n1, delta)
 w1 = 2 * np.pi * freq1      # Convert to angular frequencies
-print("w1: max frequency is ", np.argmax(abs(z2)),
-      "with the amplitude being ",  max(abs(z2)))
+print("w1: max frequency is ", np.argmax(abs(z2[0:100])),
+      "with the amplitude being ",  max(abs(z2[0:100])))
 
 
 M=len(z2)       # length of x, with noise
 freq=np.arange(M)  # frequency values, like time is the time values
-width=8  # width=2*sigma**2 where sigma is the standard deviation
-peak=12.3    # ideal value is approximately N/T1
+width=0.1  # width=2*sigma**2 where sigma is the standard deviation
+peak=12    # ideal value is approximately N/T1
 
 filter_function=(np.exp(-(freq-peak)**2/width)+np.exp(-(freq+peak-M)**2/width))
-z_filtered=z2*filter_function
+z_filtered = z2 * filter_function
 """
 we choose Gaussian filter functions, fairly wide, with
 one peak per spike in our FFT graph

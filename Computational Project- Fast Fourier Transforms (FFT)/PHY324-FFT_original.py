@@ -5,7 +5,7 @@ Created on Wed Oct 25 13:53:25 2017
 @author: Brian
 """
 
-save=True # if True then we save images as files
+save=False # if True then we save images as files
 
 from random import gauss
 import matplotlib.pyplot as plt

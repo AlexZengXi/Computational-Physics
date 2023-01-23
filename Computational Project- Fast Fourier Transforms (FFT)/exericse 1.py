@@ -96,6 +96,18 @@ ax7.set_xlabel('frequency of wave 1 [rad/s]')
 ax8.set_xlabel('frequency of wave 2 [rad/s]')
 ax9.set_xlabel('frequency of both waves [rad/s]')
 
+"""
+Failed attemped at finding max
+
+# finding the max of noisy FFT
+delta = 1/N     # Calculate frequencies of the transform in Hz
+n1 = len(x)
+freq1 = fftfreq(n1, delta)
+w1 = 2 * np.pi * freq1      # Convert to angular frequencies
+print("w1: max frequency is ", np.argmax(abs(z2)),
+      "with the amplitude being ",  max(abs(z2)))
+"""
+
 print("w1: max frequency is ", w1[np.argmax(imag(z1))],
       "with the imaginary value being ", imag(z1).max())
 print("w2: max frequency is ", w2[np.argmax(imag(z2))],
