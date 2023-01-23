@@ -1,11 +1,16 @@
-# -*- coding: utf-8 -*-
 """
-Created on Mon Oct 30 15:35:35 2017
-
-@author: Brian
+Alex Zeng, 1007099373, Jan 20th 2023
+Computational Lab - Section 3
+Signal Filtering II
 """
 
 import pickle
+import matplotlib.pyplot as plt
+import numpy as np
+from numpy.fft import fftfreq
+
+save=True # if True then we save images as files
+mydpi=300
 
 with open('noisy_sine_wave','rb') as file:
     data_from_file=pickle.load(file)
@@ -21,9 +26,13 @@ object (an array) saved so it is pretty easy
 
 import matplotlib.pyplot as plt
 
+# plot 1
 plt.plot(data_from_file)
 xmax=300
 plt.xlim(0,xmax)
+plt.xlabel("Position-Time")
+plt.ylabel("Pickle's Amplitude")
+if (save): plt.savefig('section3.1_SingleWaveAndNoiseShort.png',dpi=mydpi)
 plt.show()
 
 number=len(data_from_file)
@@ -33,59 +42,35 @@ message="There are " + \
         str(xmax)
 print(message)
 
-
-# ----------------------------------------------------------------------
-from numpy import imag, mean
-from numpy.fft import fftfreq
-
-save=False # if True then we save images as files
-
-from random import gauss
-import matplotlib.pyplot as plt
-import numpy as np
-
+"""
+The above section are for importing pickle's data to the code 
+"""
 
 N=2000   # N is how many data points we will have in our sine wave
 
 time=np.arange(N)
 data=data_from_file
 
-"""
-i=0
-noise=[]
-while i < N:
-    noise.append(gauss(0,noise_amp))
-    i+=1
-"""
+data_fft=np.fft.fft(data) # take the Fast Fourier Transforms
 
-data_fft=np.fft.fft(data)
-# take the Fast Fourier Transforms of both x and y
-
-fig, ( (ax1,ax2), (ax3,ax4)) = plt.subplots(2,2,sharex='col',sharey='col')
-ax1.plot(time,data)
-ax2.plot(np.abs(data_fft))
-ax3.plot(time,data)
-ax4.plot(np.abs(data_fft))
-
-fig.subplots_adjust(hspace=0)
-# remove the horizontal space between the top and bottom row
-# ax3.set_xlabel('Position-Time')
-# ax4.set_xlabel('Absolute value of FFT of Position-Time\n(Amplitude-Frequency)')
-# ax3.set_ylim(-30,30)
-# ax4.set_ylim(0,2000)
-# ax1.set_ylabel('Pure Sine Wave')
-# ax3.set_ylabel('Same Wave With Noise')
-
-mydpi=300
-plt.tight_layout()
-
-if (save): plt.savefig('ex3_SingleWaveAndNoiseWithFFT.png',dpi=mydpi)
+# plot 2
+plt.plot(time, data)
+plt.xlabel('Time')
+plt.ylabel('Position')
+if (save): plt.savefig('section3.2_SingleWaveAndNoiseFullLength.png',dpi=mydpi)
 plt.show()
 
-"""
-Above are part of Exercise 1
-"""
-#
+# plot 3
+plt.plot(abs(data_fft))
+plt.xlabel('Absolute value of FFT of Position-Time\n(Frequency)')
+plt.ylabel('Amplitude')
+if (save): plt.savefig('section3.3_SingleWaveAndNoiseFullLengthWithFFT.png',dpi=mydpi)
+plt.show()
+
+plt.tight_layout()
+if (save): plt.savefig('section3_SingleWaveAndNoiseWithFFT.png',dpi=mydpi)
+plt.show()
+
 # finding the max of noisy FFT
 delta = 1/N     # Calculate frequencies of the transform in Hz
 n1 = len(data)
@@ -93,12 +78,12 @@ freq1 = fftfreq(n1, delta)
 w1 = 2 * np.pi * freq1      # Convert to angular frequencies
 
 print("w1: max frequency is ", np.argmax(abs(data_fft[0:2000])),
-      "with the power being ",  max(abs(data_fft[0:2000])))
+      "with the amplitude being ",  max(abs(data_fft[0:2000])))
 print("w1: max frequency is ", np.argmax(abs(data_fft[0:280])),
-      "with the power being ",  max(abs(data_fft[0:280])))
+      "with the amplitude being ",  max(abs(data_fft[0:280])))
 print("w1: max frequency is ", np.argmax(abs(data_fft[0:150])),
-      "with the power being ",  max(abs(data_fft[0:150])))
-
+      "with the amplitude being ",  max(abs(data_fft[0:150])))
+# check the python console for all the max
 
 M=len(data_fft)       # length of x, with noise
 freq=np.arange(M)  # frequency values, like time is the time values
@@ -106,17 +91,17 @@ freq=np.arange(M)  # frequency values, like time is the time values
 width_1 = 0.01      # width=2*sigma**2 where sigma is the standard deviation
 peak_1=286    # ideal value is approximately N/T1
 filter_function_1=(np.exp(-(freq-peak_1)**2/width_1)+np.exp(-(freq+peak_1-M)**2/width_1))
-z_filtered_1 = abs(data_fft) * filter_function_1
+z_filtered_1 = data_fft * filter_function_1
 
 width_2 = 0.01      # width=2*sigma**2 where sigma is the standard deviation
 peak_2 =154    # ideal value is approximately N/T1
 filter_function_2=(np.exp(-(freq-peak_2)**2/width_2)+np.exp(-(freq+peak_2-M)**2/width_2))
-z_filtered_2 = abs(data_fft) * filter_function_2
+z_filtered_2 = data_fft * filter_function_2
 
 width_3 = 0.01      # width=2*sigma**2 where sigma is the standard deviation
 peak_3=118    # ideal value is approximately N/T1
 filter_function_3=(np.exp(-(freq-peak_3)**2/width_3)+np.exp(-(freq+peak_3-M)**2/width_3))
-z_filtered_3 = abs(data_fft) * filter_function_3
+z_filtered_3 = data_fft * filter_function_3
 
 filter_function = filter_function_1 + filter_function_2 + filter_function_3
 z_filtered = z_filtered_1 + z_filtered_2 + z_filtered_3
@@ -150,9 +135,9 @@ if we plotted (abs(fft))**2, that would be called the power spectra
 """
 
 fig.subplots_adjust(hspace=0)
-ax1.set_ylim(0,1000)
+ax1.set_ylim(0,5000)
 ax2.set_ylim(0,1.2)
-ax3.set_ylim(0,480)
+ax3.set_ylim(0,5000)
 ax1.set_ylabel('Noisy FFT')
 ax2.set_ylabel('Filter Function')
 ax3.set_ylabel('Filtered FFT')
@@ -164,7 +149,7 @@ the \n in our xlabel does not save to file well without the
 tight_layout() command
 """
 
-if(save): plt.savefig('ex3_FilteringProcess.png',dpi=mydpi)
+if(save): plt.savefig('section3_FilteringProcess.png',dpi=mydpi)
 plt.show()
 
 cleaned=np.fft.ifft(z_filtered)
@@ -222,5 +207,5 @@ ax2.set_ylabel('Filtered Data')
 ax2.set_ylabel('Theoretical Data')
 ax1.set_xlabel('Position-Time')
 
-if(save): plt.savefig('ex3_SingleWaveAndNoiseFFT.png',dpi=mydpi)
+if(save): plt.savefig('section3_SingleWaveAndNoiseFFT.png',dpi=mydpi)
 plt.show()

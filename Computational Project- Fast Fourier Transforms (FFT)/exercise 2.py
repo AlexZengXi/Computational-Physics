@@ -1,11 +1,9 @@
-# -*- coding: utf-8 -*-
 """
-Created on Wed Oct 25 13:53:25 2017
-@author: Brian
-
 Alex Zeng, 1007099373, Jan 20th 2023
+Computational Lab - Section 2
+Signal Filter I
 """
-from numpy import imag, mean
+
 from numpy.fft import fftfreq
 
 save=True # if True then we save images as files
@@ -13,7 +11,6 @@ save=True # if True then we save images as files
 from random import gauss
 import matplotlib.pyplot as plt
 import numpy as np
-
 
 N=200   # N is how many data points we will have in our sine wave
 
@@ -62,8 +59,7 @@ ax3.set_ylabel('Same Wave With Noise')
 
 mydpi=300
 plt.tight_layout()
-
-if (save): plt.savefig('ex2_SingleWaveAndNoiseWithFFT.png',dpi=mydpi)
+if (save): plt.savefig('section2_SingleWaveAndNoiseWithFFT.png',dpi=mydpi)
 plt.show()
 
 """
@@ -129,7 +125,7 @@ the \n in our xlabel does not save to file well without the
 tight_layout() command
 """
 
-if(save): plt.savefig('ex2_FilteringProcess.png',dpi=mydpi)
+if(save): plt.savefig('section2_FilteringProcess.png',dpi=mydpi)
 plt.show()
 
 cleaned=np.fft.ifft(z_filtered)
@@ -144,9 +140,9 @@ to get our "cleaned" version of the original data
 """
 
 fig, (ax1,ax2,ax3)=plt.subplots(3,1,sharex='col',sharey='col')
-ax1.plot(time/N,x)
-ax2.plot(time/N,np.real(cleaned))
-ax3.plot(time/N,y)
+ax1.plot(time,x)
+ax2.plot(time,np.real(cleaned))
+ax3.plot(time,y)
 """
 we plot the real part of our cleaned data - but since the 
 original data was real, the result of our tinkering should 
@@ -165,5 +161,5 @@ ax2.set_ylabel('Filtered Data')
 ax3.set_ylabel('Ideal Result')
 ax3.set_xlabel('Position-Time')
 
-if(save): plt.savefig('ex2_SingleWaveAndNoiseFFT.png',dpi=mydpi)
+if(save): plt.savefig('section2_SingleWaveAndNoiseFFT.png',dpi=mydpi)
 plt.show()
