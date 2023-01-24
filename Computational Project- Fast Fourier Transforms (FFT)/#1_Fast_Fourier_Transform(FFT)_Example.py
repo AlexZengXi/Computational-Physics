@@ -92,8 +92,6 @@ freq1 = fftfreq(n1, delta)      # Calculate frequencies of the transform in Hz
 # freq are 0.05 and 0.075 in Hz
 w = 2 * np.pi * freq1       # freq are 0.31416 and 0.47124 in rad/s
 
-# calculating the amplitude
-amp = 1 / N * z3
 
 
 
