@@ -30,8 +30,18 @@ z = y1 + y2     # combiniation of sine wave 1 and 2
 
 z1=abs(np.fft.fft(x))
 z2=abs(np.fft.fft(y))
-z3=abs(np.fft.fft(z))       # z3 peak at 10, 15
+z3=abs(np.fft.fft(z))       # z3 peak at 10, 15 (checked manually)
 # take the Fast Fourier Transforms of both x and y
+
+# print("w1: max frequency is ", np.argmax(abs(z3[:100])))
+# print("w2: max frequency is ", np.argmax(abs(z3[10:100])))
+# a = max(abs(z3[10:100]))
+# for i in range(len(z3[11:100])):
+#     if a == (abs(z3[11:100]))[i]:
+#         print(a)
+#         print(i+10)
+# print(z3[15])
+
 """
 FFT It converts a signal into individual spectral components and 
 thereby provides frequency information about the signal.

@@ -125,6 +125,7 @@ fig, (ax1,ax2,ax3)=plt.subplots(3,1,sharex='col')
 ax1.plot(np.abs(data_fft))
 ax2.plot(filter_function)
 ax3.plot(np.abs(z_filtered))
+
 """
 note that in general, the fft is a complex function, hence we plot
 the absolute value of it. in our case, the fft is real, but the
@@ -135,20 +136,15 @@ if we plotted (abs(fft))**2, that would be called the power spectra
 """
 
 fig.subplots_adjust(hspace=0)
-ax1.set_ylim(0,5000)
+ax1.set_ylim(0,13000)
 ax2.set_ylim(0,1.2)
-ax3.set_ylim(0,5000)
+ax3.set_ylim(0,13000)
 ax1.set_ylabel('Noisy FFT')
 ax2.set_ylabel('Filter Function')
 ax3.set_ylabel('Filtered FFT')
 ax3.set_xlabel('Absolute value of FFT of Position-Time\n(Amplitude-Frequency)')
 
 plt.tight_layout()
-""" 
-the \n in our xlabel does not save to file well without the
-tight_layout() command
-"""
-
 if(save): plt.savefig('section3_FilteringProcess.png',dpi=mydpi)
 plt.show()
 
@@ -163,31 +159,31 @@ to eliminate most of the noise, then took the inverse fft
 to get our "cleaned" version of the original data
 """
 
-a1=3
-a2=2.13630664134*a1
-a3=4.04633408282*a1
+
+n1 = len(data_fft)
+delta = 1
+freq1 = fftfreq(n1, delta)      # Calculate frequencies of the transform in Hz
 
 # calculating Theoretical graph
-A1=int(a3)   # wave amplitude
-T1=int(1/286)  # wave period
+A1=2/N * np.abs(data_fft[286])   # wave amplitude
+T1=1/freq1[286]  # wave period
 y1=A1*np.sin(2.*np.pi*time/T1)
 
-A2=int(a2)
-T2=int(1/154)
+A2=2/N * np.abs(data_fft[154])
+T2=1/freq1[154]
 y2=A2*np.sin(2.*np.pi*time/T2)
 
-A3=int(a1)
-T3=int(1/118)
+A3=2/N * np.abs(data_fft[118])
+T3=1/freq1[118]
 y3=A3*np.sin(2.*np.pi*time/T3)
 
 z = y1+y2+y3
-z_fft=np.fft.fft(z)
 
 # ploting
 fig, (ax1,ax2,ax3)=plt.subplots(3,1,sharex='col',sharey='col')
 ax1.plot(time,data)
 ax2.plot(time,np.real(cleaned))
-ax3.plot(time,abs(z_fft))
+ax3.plot(time,z)
 """ 
 we plot the real part of our cleaned data - but since the 
 original data was real, the result of our tinkering should 
