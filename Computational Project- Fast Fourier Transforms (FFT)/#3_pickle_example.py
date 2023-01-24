@@ -9,7 +9,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 from numpy.fft import fftfreq
 
-save=True # if True then we save images as files
+save=False # if True then we save images as files
 mydpi=300
 
 with open('noisy_sine_wave','rb') as file:

@@ -17,7 +17,7 @@ dt=100
 time=np.linspace(0,N,dt)
 
 A = 1
-# w = t/4
+# w = t/400
 y = A * np.sin(time * (time/400))
 
 # calculating the FFT
@@ -27,13 +27,13 @@ y_fft = abs(np.fft.fft(y))
 plt.plot(time,y)
 plt.ylabel("y")
 plt.xlabel("Time [s]")
-plt.show()
 if(save): plt.savefig('section4.1_TimeVaryingSingleWavePT.png',dpi=mydpi)
+plt.show()
 
 plt.plot(y_fft)
 plt.ylabel("FFT(y)")
-plt.xlabel("Time [s]")
-plt.show()
+plt.xlabel("Frequency [Hz]")
 if(save): plt.savefig('section4.2_TimeVaryingSingleWaveWithFFT.png',dpi=mydpi)
+plt.show()
 
 

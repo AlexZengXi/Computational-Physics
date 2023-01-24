@@ -8,7 +8,7 @@ Fast Fourier Transform (FFT)
 from numpy import imag
 from numpy.fft import fftfreq
 
-save=True # if True then we save images as files
+save=False # if True then we save images as files
 
 import matplotlib.pyplot as plt
 import numpy as np
