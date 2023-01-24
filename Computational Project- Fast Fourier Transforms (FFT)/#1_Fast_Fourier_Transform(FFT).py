@@ -1,6 +1,7 @@
 """
 Alex Zeng, 1007099373, Jan 20th 2023
-Computational Lab - Section 1: fast Fourier transform
+Computational Lab - Section 1:
+Fast Fourier Transform (FFT)
 """
 
 

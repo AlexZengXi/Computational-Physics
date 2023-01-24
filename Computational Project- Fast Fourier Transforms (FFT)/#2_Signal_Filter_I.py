@@ -1,60 +1,27 @@
-# -*- coding: utf-8 -*-
 """
-Created on Mon Oct 30 15:35:35 2017
-
-@author: Brian
-"""
-
-import pickle
-
-with open('noisy_sine_wave','rb') as file:
-    data_from_file=pickle.load(file)
-"""
-the above few lines makes an array called data_from_file which contains
-a noisy sine wave as long as you downloaded the file "noisy_sine_wave" 
-and put it in the same directory as this python file
-
-pickle is a Python package which nicely saves data to files. it can be
-a little tricky when you save lots of data, but this file only has one
-object (an array) saved so it is pretty easy
+Alex Zeng, 1007099373, Jan 20th 2023
+Computational Lab - Section 2
+Signal Filter I
 """
 
-import matplotlib.pyplot as plt
-
-plt.plot(data_from_file)
-xmax=300
-plt.xlim(0,xmax)
-plt.show()
-
-number=len(data_from_file)
-message="There are " + \
-        str(number) + \
-        " data points in total, only drawing the first " + \
-        str(xmax)
-print(message)
-
-
-# ----------------------------------------------------------------------
-from numpy import imag, mean
 from numpy.fft import fftfreq
 
-save=False # if True then we save images as files
+save=True # if True then we save images as files
 
 from random import gauss
 import matplotlib.pyplot as plt
 import numpy as np
 
-
-N=300   # N is how many data points we will have in our sine wave
+N=200   # N is how many data points we will have in our sine wave
 
 time=np.arange(N)
 
-A1=20.   # wave amplitude
-T1=60.  # wave period
+A1=5.   # wave amplitude
+T1=17.  # wave period
+y1=A1*np.sin(2.*np.pi*time/T1)
+y=y1
 
-y=data_from_file[:300]
-
-noise_amp=A1/2
+noise_amp=A1/2.
 # set the amplitude of the noise relative to sine's amp
 
 """
@@ -85,15 +52,14 @@ fig.subplots_adjust(hspace=0)
 # remove the horizontal space between the top and bottom row
 ax3.set_xlabel('Position-Time')
 ax4.set_xlabel('Absolute value of FFT of Position-Time\n(Amplitude-Frequency)')
-ax3.set_ylim(-30,30)
-ax4.set_ylim(0,2000)
+ax3.set_ylim(-13,13)
+ax4.set_ylim(0,480)
 ax1.set_ylabel('Pure Sine Wave')
 ax3.set_ylabel('Same Wave With Noise')
 
 mydpi=300
 plt.tight_layout()
-
-if (save): plt.savefig('ex3_SingleWaveAndNoiseWithFFT.png',dpi=mydpi)
+if (save): plt.savefig('section2.1._SingleWaveAndNoiseWithFFT.png',dpi=mydpi)
 plt.show()
 
 """
@@ -111,11 +77,8 @@ print("w1: max frequency is ", np.argmax(abs(z2[0:100])),
 
 M=len(z2)       # length of x, with noise
 freq=np.arange(M)  # frequency values, like time is the time values
-# width= 2*(np.std(z2)/max(abs(z2)))**2  # width=2*sigma**2 where sigma is the standard deviation
-peak=43    # ideal value is approximately N/T1
-width = 45
-
-print("std", width)
+width= 0.001  # width=2*sigma**2 where sigma is the standard deviation
+peak=12    # ideal value is approximately N/T1
 
 filter_function=(np.exp(-(freq-peak)**2/width)+np.exp(-(freq+peak-M)**2/width))
 z_filtered = z2 * filter_function
@@ -162,7 +125,7 @@ the \n in our xlabel does not save to file well without the
 tight_layout() command
 """
 
-if(save): plt.savefig('ex3_FilteringProcess.png',dpi=mydpi)
+if(save): plt.savefig('section2.2_FilteringProcess.png',dpi=mydpi)
 plt.show()
 
 cleaned=np.fft.ifft(z_filtered)
@@ -177,9 +140,9 @@ to get our "cleaned" version of the original data
 """
 
 fig, (ax1,ax2,ax3)=plt.subplots(3,1,sharex='col',sharey='col')
-ax1.plot(time/N,x)
-ax2.plot(time/N,np.real(cleaned))
-ax3.plot(time/N,y)
+ax1.plot(time,x)
+ax2.plot(time,np.real(cleaned))
+ax3.plot(time,y)
 """
 we plot the real part of our cleaned data - but since the 
 original data was real, the result of our tinkering should 
@@ -192,11 +155,11 @@ it's just getting rid of a pesky warning message
 """
 
 fig.subplots_adjust(hspace=0)
-ax1.set_ylim(-30,30)
+ax1.set_ylim(-13,13)
 ax1.set_ylabel('Original Data')
 ax2.set_ylabel('Filtered Data')
 ax3.set_ylabel('Ideal Result')
 ax3.set_xlabel('Position-Time')
 
-if(save): plt.savefig('ex3_SingleWaveAndNoiseFFT.png',dpi=mydpi)
+if(save): plt.savefig('section2.3_SingleWaveAndNoiseFFT.png',dpi=mydpi)
 plt.show()

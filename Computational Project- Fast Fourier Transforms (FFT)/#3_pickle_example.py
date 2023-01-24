@@ -67,10 +67,6 @@ plt.ylabel('Amplitude')
 if (save): plt.savefig('section3.3_SingleWaveAndNoiseFullLengthWithFFT.png',dpi=mydpi)
 plt.show()
 
-plt.tight_layout()
-if (save): plt.savefig('section3_SingleWaveAndNoiseWithFFT.png',dpi=mydpi)
-plt.show()
-
 # finding the max of noisy FFT
 delta = 1/N     # Calculate frequencies of the transform in Hz
 n1 = len(data)
@@ -145,7 +141,7 @@ ax3.set_ylabel('Filtered FFT')
 ax3.set_xlabel('Absolute value of FFT of Position-Time\n(Amplitude-Frequency)')
 
 plt.tight_layout()
-if(save): plt.savefig('section3_FilteringProcess.png',dpi=mydpi)
+if(save): plt.savefig('section3.4_FilteringProcess.png',dpi=mydpi)
 plt.show()
 
 cleaned=np.fft.ifft(z_filtered)
@@ -200,8 +196,8 @@ ax1.set_xlim(0,300)
 ax1.set_ylim(-30,30)
 ax1.set_ylabel('Original Data')
 ax2.set_ylabel('Filtered Data')
-ax2.set_ylabel('Theoretical Data')
-ax1.set_xlabel('Position-Time')
+ax3.set_ylabel('Theoretical Data')
+ax3.set_xlabel('Position-Time')
 
-if(save): plt.savefig('section3_SingleWaveAndNoiseFFT.png',dpi=mydpi)
+if(save): plt.savefig('section3.5_SingleWaveAndNoiseFFT.png',dpi=mydpi)
 plt.show()
