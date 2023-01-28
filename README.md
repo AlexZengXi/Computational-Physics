@@ -1,3 +1,3 @@
-# Computational Physics Course Work from University of Toronto
+# Computational Physics
  
-Course work from the University of Toronto PHY324 Physics Practical 2 course
+Computational Physics Course Work from University of Toronto
