@@ -18,7 +18,7 @@ def myGauss(x, A, mean, width, base):
 
 def pulse_shape(t_rise, t_fall):
     xx=np.linspace(0, 4095, 4096)
-    yy = -(np.exp(-(xx-1000)/t_rise)-np.exp(-(xx-1000)/t_fall)) # filter func
+    yy = -(np.exp(-(xx-1000)/t_rise)-np.exp(-(xx-1000)/t_fall))
     yy[:1000]=0
     yy /= np.max(yy)
     return yy
@@ -31,11 +31,6 @@ def fit_pulse(x, A):
 
 with open("calibration_p3.pkl","rb") as file:
     calibration_data=pickle.load(file)
-with open("noise_p3.pkl","rb") as file:
-    noise_data=pickle.load(file)
-with open("signal_p3.pkl","rb") as file:
-    signal_data=pickle.load(file)
-
 
 pulse_template = pulse_shape(20,80)
 plt.plot(pulse_template/2000, label='Pulse Template', color='r')
@@ -52,58 +47,38 @@ Always a good idea to look at some of your data before analysing it!
 It also plots our pulse template which has been scaled to be slightly 
 larger than any of the actual pulses to make it visible.
 """
-org1=np.zeros(1000)
-amp1=np.zeros(1000)     # max-min
-amp2=np.zeros(1000)     # max-baseline
-area1=np.zeros(1000)    # integral of pre-pulse
-area2=np.zeros(1000)    # integral of the pulse
-area3=np.zeros(1000)    # integral of after-pulse
+
+amp1=np.zeros(1000)
+amp2=np.zeros(1000)
+area1=np.zeros(1000)
+area2=np.zeros(1000)
+area3=np.zeros(1000)
 pulse_fit=np.zeros(1000)
-"""
-These are the 6 energy estimators as empty arrays of the correct size.
-"""
+# These are the 6 energy estimators as empty arrays of the correct size.
 
 for ievt in range(1000):
     current_data = calibration_data['evt_%i'%ievt]
-    org1 = np.max(current_data)
-
-    # max-min
-    amp1[ievt] = np.max(current_data) - np.min(current_data)
-    # max-baseline, where baseline: average of the pre-pulse region
-    amp2[ievt] = np.max(current_data) - np.average(current_data[0:1000])
-    # integral of pre-pulse
-    area1[ievt] = np.sum(current_data[0:1000]) - np.average(current_data[0:1000])
-    # integral of the pulse
-    area2[ievt] = np.sum(current_data[1000:1100]) - np.average(current_data[0:1000])
-    # integral of after-pulse
-    area3[ievt] = np.sum(current_data[1100:4096]) - np.average(current_data[0:1000])
-    # pulse_fit
-    pulse_fit[ievt] = fit_pulse(1020,1)
+    amp1_calculation = np.max(current_data)
+    amp1[ievt] = amp1_calculation
 """
-Calculating all amplitude estimators.
+This incorrectly calculates one of the amplitude estimators.
+You will want to fix it, and then do the other 5 estimators 
+inside this for loop. I.e. you will need to add:
+    amp2[ievt] = ...
+    area1[ievt] = ...
+etc.
 """
 
 amp1*=1000 # convert from V to mV   
-amp2*=1000  # the one from Appendix B
-area1*=1000
-area2*=1000
-area3*=1000
-pulse_fit*=1000
 
-amp1 = amp2
-
-num_bins1=25
-bin_range1=(0.08,0.4)
-
-# num_bins2=25
-# bin_range2=(0.08,0.4)
+num_bins1=40 
+bin_range1=(0,0.4) 
 """
 These two values were picked by trial and error. You'll 
 likely want different values for each estimator.
 """
 
 n1, bin_edges1, _ = plt.hist(amp1, bins=num_bins1, range=bin_range1, color='k', histtype='step', label='Data')
-# n2, bin_edges2, _ = plt.hist(amp2, bins=num_bins2, range=bin_range2, color='k', histtype='step', label='Data')
 # This plots the histogram AND saves the counts and bin_edges for later use
 
 plt.xlabel('Energy Estimator: Maximum Value (mV)')
@@ -148,9 +123,8 @@ x_bestfit1 = np.linspace(bin_edges1[0], bin_edges1[-1], 1000)
 y_bestfit1 = myGauss(x_bestfit1, *popt1) 
 # Best fit line smoothed with 1000 datapoints. Don't use best fit lines with 5 or 10 data points!
 
-fontsize=12
+fontsize=18
 plt.plot(x_bestfit1, y_bestfit1, label='Fit')
-plt.title("amp2")
 plt.text(0.01, 140, r'$\mu$ = %3.2f mV'%(popt1[1]), fontsize=fontsize)
 plt.text(0.01, 120, r'$\sigma$ = %3.2f mV'%(popt1[2]), fontsize=fontsize)
 plt.text(0.01, 100, r'$\chi^2$/DOF=', fontsize=fontsize)
@@ -182,47 +156,3 @@ Note: you should show this before/after conversion for your first
 energy estimator. To save space, only show the after histograms for
 the remaining 5 energy estimators.
 """
-
-conversion_factor1 = 1000
-energy_amp1 = amp1 * conversion_factor1
-
-n1, bin_edges1, _ = plt.hist(energy_amp1, bins=num_bins1, range=bin_range1, color='k', histtype='step', label='Data')
-# n2, bin_edges2, _ = plt.hist(amp2, bins=num_bins2, range=bin_range2, color='k', histtype='step', label='Data')
-# This plots the histogram AND saves the counts and bin_edges for later use
-
-plt.xlabel('Energy Estimator: Maximum Value (mV)')
-plt.ylabel('Events / %2.2f mV'%((bin_range1[-1]-bin_range1[0])/num_bins1));
-plt.xlim(bin_range1)
-# If the legend covers some data, increase the plt.xlim value, maybe (0,0.5)
-
-bin_centers1 = 0.5*(bin_edges1[1:]+bin_edges1[:-1])
-
-sig1 = np.sqrt(n1)
-sig1=np.where(sig1==0, 1, sig1)
-# The uncertainty on 0 count is 1, not 0. Replace all 0s with 1s.
-
-plt.errorbar(bin_centers1, n1, yerr=sig1, fmt='none', c='k')
-# This adds errorbars to the histograms, where each uncertainty is sqrt(y)
-
-popt1, pcov1 = curve_fit(myGauss, bin_centers1, n1,
-             sigma = sig1, p0=(100,0.25,0.05,5), absolute_sigma=True)
-n1_fit = myGauss(bin_centers1, *popt1)
-
-chisquared1 = np.sum( ((n1 - n1_fit)/sig1 )**2)
-dof1 = num_bins1 - len(popt1)
-# Number of degrees of freedom is the number of data points less the number of fitted parameters
-
-x_bestfit1 = np.linspace(bin_edges1[0], bin_edges1[-1], 1000)
-y_bestfit1 = myGauss(x_bestfit1, *popt1)
-# Best fit line smoothed with 1000 datapoints. Don't use best fit lines with 5 or 10 data points!
-
-fontsize=12
-plt.plot(x_bestfit1, y_bestfit1, label='Fit')
-plt.title("amp2 version 2")
-plt.text(0.01, 140, r'$\mu$ = %3.2f mV'%(popt1[1]), fontsize=fontsize)
-plt.text(0.01, 120, r'$\sigma$ = %3.2f mV'%(popt1[2]), fontsize=fontsize)
-plt.text(0.01, 100, r'$\chi^2$/DOF=', fontsize=fontsize)
-plt.text(0.01, 80, r'%3.2f/%i'%(chisquared1,dof1), fontsize=fontsize)
-plt.text(0.01, 60, r'$\chi^2$ prob.= %1.1f'%(1-chi2.cdf(chisquared1,dof1)), fontsize=fontsize)
-plt.legend(loc=1)
-plt.show()
