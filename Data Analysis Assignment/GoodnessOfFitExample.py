@@ -69,12 +69,12 @@ def myGauss(x, A, mean, sigma):
 def quad(x, A, mid_x, shape):
     return A - shape*(x - mid_x)**2
 
-num_bins = 100
+num_bins = 100      # determines how many data points you need
 p0 = (25, 5, 1)
 xdata = np.linspace(0, 10, num_bins)
 ydata = quad(xdata, *p0)
 
-noise_level = 2
+noise_level = 0.1       # try between 0.1 to 10
 noise = np.random.normal(0, noise_level, num_bins)
 noisy_ydata = ydata + noise
 

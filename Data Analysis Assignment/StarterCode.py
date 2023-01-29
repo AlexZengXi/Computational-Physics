@@ -18,7 +18,7 @@ def myGauss(x, A, mean, width, base):
 
 def pulse_shape(t_rise, t_fall):
     xx=np.linspace(0, 4095, 4096)
-    yy = -(np.exp(-(xx-1000)/t_rise)-np.exp(-(xx-1000)/t_fall))
+    yy = -(np.exp(-(xx-1000)/t_rise)-np.exp(-(xx-1000)/t_fall)) # filter func
     yy[:1000]=0
     yy /= np.max(yy)
     return yy
@@ -31,6 +31,7 @@ def fit_pulse(x, A):
 
 with open("calibration_p3.pkl","rb") as file:
     calibration_data=pickle.load(file)
+
 
 pulse_template = pulse_shape(20,80)
 plt.plot(pulse_template/2000, label='Pulse Template', color='r')
@@ -70,6 +71,9 @@ etc.
 """
 
 amp1*=1000 # convert from V to mV   
+
+
+
 
 num_bins1=40 
 bin_range1=(0,0.4) 
