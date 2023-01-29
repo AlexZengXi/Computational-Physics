@@ -31,6 +31,10 @@ def fit_pulse(x, A):
 
 with open("calibration_p3.pkl","rb") as file:
     calibration_data=pickle.load(file)
+with open("noise_p3.pkl","rb") as file:
+    noise_data=pickle.load(file)
+with open("signal_p3.pkl","rb") as file:
+    signal_data=pickle.load(file)
 
 
 pulse_template = pulse_shape(20,80)
