@@ -53,31 +53,39 @@ It also plots our pulse template which has been scaled to be slightly
 larger than any of the actual pulses to make it visible.
 """
 
-amp1=np.zeros(1000)
-amp2=np.zeros(1000)
-area1=np.zeros(1000)
-area2=np.zeros(1000)
-area3=np.zeros(1000)
+amp1=np.zeros(1000)     # max-min
+amp2=np.zeros(1000)     # max-baseline
+area1=np.zeros(1000)    # integral of pre-pulse
+area2=np.zeros(1000)    # integral of the pulse
+area3=np.zeros(1000)    # integral of after-pulse
 pulse_fit=np.zeros(1000)
-# These are the 6 energy estimators as empty arrays of the correct size.
+"""
+These are the 6 energy estimators as empty arrays of the correct size.
+"""
 
 for ievt in range(1000):
     current_data = calibration_data['evt_%i'%ievt]
-    amp1_calculation = np.max(current_data)
-    amp1[ievt] = amp1_calculation
+    # max-min
+    amp1[ievt] = np.max(current_data) - np.min(current_data)
+    # max-baseline, where baseline: average of the pre-pulse region
+    amp2[ievt] = np.max(current_data) - np.average(current_data[0:1000])
+    # integral of pre-pulse
+    area1[ievt] = np.sum(current_data[0:1000])
+    # integral of the pulse
+    area1[ievt] = np.sum(current_data[1000:1100])
+    # integral of after-pulse
+    area1[ievt] = np.sum(current_data[1100:4096])
+    # pulse_fit
 """
-This incorrectly calculates one of the amplitude estimators.
-You will want to fix it, and then do the other 5 estimators 
-inside this for loop. I.e. you will need to add:
-    amp2[ievt] = ...
-    area1[ievt] = ...
-etc.
+Calculating all amplitude estimators.
 """
 
 amp1*=1000 # convert from V to mV   
-
-
-
+amp2*=1000
+area1*=1000
+area2*=1000
+area3*=1000
+pulse_fit*=1000
 
 num_bins1=40 
 bin_range1=(0,0.4) 
