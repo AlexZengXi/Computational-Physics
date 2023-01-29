@@ -70,12 +70,13 @@ for ievt in range(1000):
     # max-baseline, where baseline: average of the pre-pulse region
     amp2[ievt] = np.max(current_data) - np.average(current_data[0:1000])
     # integral of pre-pulse
-    area1[ievt] = np.sum(current_data[0:1000])
+    area1[ievt] = np.sum(current_data[0:1000]) - np.average(current_data[0:1000])
     # integral of the pulse
-    area1[ievt] = np.sum(current_data[1000:1100])
+    area2[ievt] = np.sum(current_data[1000:1100]) - np.average(current_data[0:1000])
     # integral of after-pulse
-    area1[ievt] = np.sum(current_data[1100:4096])
+    area3[ievt] = np.sum(current_data[1100:4096]) - np.average(current_data[0:1000])
     # pulse_fit
+    pulse_fit[ievt] = fit_pulse(1020,1)
 """
 Calculating all amplitude estimators.
 """
@@ -86,6 +87,8 @@ area1*=1000
 area2*=1000
 area3*=1000
 pulse_fit*=1000
+
+amp1 = pulse_fit
 
 num_bins1=40 
 bin_range1=(0,0.4) 
