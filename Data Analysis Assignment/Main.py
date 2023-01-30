@@ -96,9 +96,9 @@ def main(num_bins1, bin_range1, amps, p):
                                  color='k', histtype='step', label='Data')
     # This plots the histogram AND saves the counts and bin_edges for later use
     
-    plt.xlabel('Energy Estimator: Maximum Value (mV)')
-    plt.ylabel('Events / %2.2f mV'%((bin_range1[-1]-bin_range1[0])/num_bins1));
-    plt.xlim(bin_range1)  
+    # plt.xlabel('Energy Estimator: Maximum Value (mV)')
+    # plt.ylabel('Events / %2.2f mV'%((bin_range1[-1]-bin_range1[0])/num_bins1));
+    # plt.xlim(bin_range1)
     # If the legend covers some data, increase the plt.xlim value, maybe (0,0.5)
     
     bin_centers1 = 0.5*(bin_edges1[1:]+bin_edges1[:-1])
@@ -117,7 +117,7 @@ def main(num_bins1, bin_range1, amps, p):
     sig1=np.where(sig1==0, 1, sig1) 
     # The uncertainty on 0 count is 1, not 0. Replace all 0s with 1s.
     
-    plt.errorbar(bin_centers1, n1, yerr=sig1, fmt='none', c='k')
+    # plt.errorbar(bin_centers1, n1, yerr=sig1, fmt='none', c='k')
     # This adds errorbars to the histograms, where each uncertainty is sqrt(y)
     
     popt1, pcov1 = curve_fit(myGauss, bin_centers1, n1, 
@@ -145,14 +145,14 @@ def main(num_bins1, bin_range1, amps, p):
           '%3.4f/%i'%(chisquared1,dof1),"\r\n",
           'chi^2 prob.= %3.4f'%(1-chi2.cdf(chisquared1,dof1)))
     fontsize=10
-    plt.plot(x_bestfit1, y_bestfit1, label='Fit')
+    # plt.plot(x_bestfit1, y_bestfit1, label='Fit')
     # plt.text(0.01, 140, r'$\mu$ = %3.2f mV'%(popt1[1]), fontsize=fontsize)
     # plt.text(0.01, 120, r'$\sigma$ = %3.2f mV'%(popt1[2]), fontsize=fontsize)
     # plt.text(0.01, 100, r'$\chi^2$/DOF=', fontsize=fontsize)
     # plt.text(0.01, 80, r'%3.2f/%i'%(chisquared1,dof1), fontsize=fontsize)
     # plt.text(0.01, 60, r'$\chi^2$ prob.= %1.1f'%(1-chi2.cdf(chisquared1,dof1)), fontsize=fontsize)
-    plt.legend(loc=1)
-    plt.show()
+    # plt.legend(loc=1)
+    # plt.show()
     # plt.figure()
     
     
@@ -266,87 +266,87 @@ MAIN((main(num_bins1, (0.2,0.4), amps[0],p))[:2], num_bins1, bin_range1, amps[0]
 
 
 # --------------- Part 3 -------------
-
-
-stds = []
-for i in range(len(noise)):
-    stds.append(np.std(noise['evt_%i'%i]))
-std = np.mean(stds)
-sig = np.full(len(noise['evt_0']), std)
-sig = np.where(sig==0, 1, sig) 
-
-
-for ievt in range(1000):
-    current_data = signal['evt_%i'%ievt]
-    popt, pcov = curve_fit(fit_pulse, xx, current_data, 
-                  sigma = sig, absolute_sigma=True)
-    pulse_fit[ievt] = popt[0]
-pulse_fit*=1000
-amp = pulse_fit
-
-
-bin_range1 = (-5,12.5) 
-(a, b,c,d)= (100,1,4,5)
-p=(a,b,c,d)
-
-
-conv = (main(num_bins1, (2,20), amps[0],p))[0]
-amp *= conv
-
-
-n1, bin_edges1, _ = plt.hist(amp, bins=num_bins1, range=bin_range1,\
-                             color='k', histtype='step', label='Data')
-# This plots the histogram AND saves the counts and bin_edges for later use
-
-plt.xlabel('Energy Estimator: Maximum Value (mV)')
-plt.ylabel('Events / %2.2f mV'%((bin_range1[-1]-bin_range1[0])/num_bins1));
-plt.xlim(bin_range1)
-# If the legend covers some data, increase the plt.xlim value, maybe (0,0.5)
-
-bin_centers1 = 0.5*(bin_edges1[1:]+bin_edges1[:-1])
-
-
-
-sig1 = np.sqrt(n1)
-sig1=np.where(sig1==0, 1, sig1) 
-# The uncertainty on 0 count is 1, not 0. Replace all 0s with 1s.
-
-plt.errorbar(bin_centers1, n1, yerr=sig1, fmt='none', c='k')
-# This adds errorbars to the histograms, where each uncertainty is sqrt(y)
-
-
-popt1, pcov1 = curve_fit(myGauss, bin_centers1, n1, 
-             sigma = sig1, p0=p, absolute_sigma=True)
-
-n1_fit = myGauss(bin_centers1, *popt1)
-
-
-chisquared1 = np.sum( ((n1 - n1_fit)/sig1 )**2)
-dof1 = num_bins1 - len(popt1)
-
-
-x_bestfit1 = np.linspace(bin_edges1[0], bin_edges1[-1], 1000)
-y_bestfit1 = myGauss(x_bestfit1, *popt1) 
-
-
-print('mu = %3.4f'%(popt1[1]),"\r\n", 
-      'sigma = %3.4f'%(popt1[2]),"\r\n",
-      '%3.4f/%i'%(chisquared1,dof1),"\r\n",
-      'chi^2 prob.= %3.4f'%(1-chi2.cdf(chisquared1,dof1)))
-fontsize=10
-plt.plot(x_bestfit1, y_bestfit1, label='Fit')
-# plt.text(0.01, 140, r'$\mu$ = %3.2f mV'%(popt1[1]), fontsize=fontsize)
-# plt.text(0.01, 120, r'$\sigma$ = %3.2f mV'%(popt1[2]), fontsize=fontsize)
-# plt.text(0.01, 100, r'$\chi^2$/DOF=', fontsize=fontsize)
-# plt.text(0.01, 80, r'%3.2f/%i'%(chisquared1,dof1), fontsize=fontsize)
-# plt.text(0.01, 60, r'$\chi^2$ prob.= %1.1f'%(1-chi2.cdf(chisquared1,dof1)), fontsize=fontsize)
-plt.legend(loc=1)
-plt.show()
-
-
-
-
-
+#
+#
+# stds = []
+# for i in range(len(noise)):
+#     stds.append(np.std(noise['evt_%i'%i]))
+# std = np.mean(stds)
+# sig = np.full(len(noise['evt_0']), std)
+# sig = np.where(sig==0, 1, sig)
+#
+#
+# for ievt in range(1000):
+#     current_data = signal['evt_%i'%ievt]
+#     popt, pcov = curve_fit(fit_pulse, xx, current_data,
+#                   sigma = sig, absolute_sigma=True)
+#     pulse_fit[ievt] = popt[0]
+# pulse_fit*=1000
+# amp = pulse_fit
+#
+#
+# bin_range1 = (-5,12.5)
+# (a, b,c,d)= (100,1,4,5)
+# p=(a,b,c,d)
+#
+#
+# conv = (main(num_bins1, (2,20), amps[0],p))[0]
+# amp *= conv
+#
+#
+# n1, bin_edges1, _ = plt.hist(amp, bins=num_bins1, range=bin_range1,\
+#                              color='k', histtype='step', label='Data')
+# # This plots the histogram AND saves the counts and bin_edges for later use
+#
+# plt.xlabel('Energy Estimator: Maximum Value (mV)')
+# plt.ylabel('Events / %2.2f mV'%((bin_range1[-1]-bin_range1[0])/num_bins1));
+# plt.xlim(bin_range1)
+# # If the legend covers some data, increase the plt.xlim value, maybe (0,0.5)
+#
+# bin_centers1 = 0.5*(bin_edges1[1:]+bin_edges1[:-1])
+#
+#
+#
+# sig1 = np.sqrt(n1)
+# sig1=np.where(sig1==0, 1, sig1)
+# # The uncertainty on 0 count is 1, not 0. Replace all 0s with 1s.
+#
+# plt.errorbar(bin_centers1, n1, yerr=sig1, fmt='none', c='k')
+# # This adds errorbars to the histograms, where each uncertainty is sqrt(y)
+#
+#
+# popt1, pcov1 = curve_fit(myGauss, bin_centers1, n1,
+#              sigma = sig1, p0=p, absolute_sigma=True)
+#
+# n1_fit = myGauss(bin_centers1, *popt1)
+#
+#
+# chisquared1 = np.sum( ((n1 - n1_fit)/sig1 )**2)
+# dof1 = num_bins1 - len(popt1)
+#
+#
+# x_bestfit1 = np.linspace(bin_edges1[0], bin_edges1[-1], 1000)
+# y_bestfit1 = myGauss(x_bestfit1, *popt1)
+#
+#
+# print('mu = %3.4f'%(popt1[1]),"\r\n",
+#       'sigma = %3.4f'%(popt1[2]),"\r\n",
+#       '%3.4f/%i'%(chisquared1,dof1),"\r\n",
+#       'chi^2 prob.= %3.4f'%(1-chi2.cdf(chisquared1,dof1)))
+# fontsize=10
+# plt.plot(x_bestfit1, y_bestfit1, label='Fit')
+# # plt.text(0.01, 140, r'$\mu$ = %3.2f mV'%(popt1[1]), fontsize=fontsize)
+# # plt.text(0.01, 120, r'$\sigma$ = %3.2f mV'%(popt1[2]), fontsize=fontsize)
+# # plt.text(0.01, 100, r'$\chi^2$/DOF=', fontsize=fontsize)
+# # plt.text(0.01, 80, r'%3.2f/%i'%(chisquared1,dof1), fontsize=fontsize)
+# # plt.text(0.01, 60, r'$\chi^2$ prob.= %1.1f'%(1-chi2.cdf(chisquared1,dof1)), fontsize=fontsize)
+# plt.legend(loc=1)
+# plt.show()
+#
+#
+#
+#
+#
 
 
 
