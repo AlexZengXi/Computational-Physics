@@ -38,14 +38,14 @@ with open("signal_p3.pkl","rb") as file:
 
 
 pulse_template = pulse_shape(20,80)
-plt.plot(pulse_template/2000, label='Pulse Template', color='r')
-for itrace in range(10):
-    plt.plot(calibration_data['evt_%i'%itrace], alpha=0.3)
-plt.xlabel('Sample Index')
-plt.ylabel('Readout (V)')
-plt.title('Calibration data (10 sets)')
-plt.legend(loc=1)
-plt.show()
+# plt.plot(pulse_template/2000, label='Pulse Template', color='r')
+# for itrace in range(10):
+#     plt.plot(calibration_data['evt_%i'%itrace], alpha=0.3)
+# plt.xlabel('Sample Index')
+# plt.ylabel('Readout (V)')
+# plt.title('Calibration data (10 sets)')
+# plt.legend(loc=1)
+# plt.show()
 """ 
 This shows the first 10 data sets on top of each other.
 Always a good idea to look at some of your data before analysing it!
@@ -59,41 +59,54 @@ area1=np.zeros(1000)    # integral of pre-pulse
 area2=np.zeros(1000)    # integral of the pulse
 area3=np.zeros(1000)    # integral of after-pulse
 pulse_fit=np.zeros(1000)
+amps = [amp1, amp2, area1, area2, area3, pulse_fit]
 """
 These are the 6 energy estimators as empty arrays of the correct size.
 """
 
+stds = []
+for i in range(len(noise)):
+    stds.append(np.std(noise['evt_%i'%i]))
+std = np.mean(stds)
+sig = np.full(len(noise['evt_0']), std)
+sig = np.where(sig==0, 1, sig)
+"""
+calculating the std of the noise
+
+QUESTION: what is np.where for?
+"""
+
+
 for ievt in range(1000):
     current_data = calibration_data['evt_%i'%ievt]
-    org1 = np.max(current_data)
 
     # max-min
     amp1[ievt] = np.max(current_data) - np.min(current_data)
     # max-baseline, where baseline: average of the pre-pulse region
     amp2[ievt] = np.max(current_data) - np.average(current_data[0:1000])
     # integral of pre-pulse
-    area1[ievt] = np.sum(current_data[0:1000]) - np.average(current_data[0:1000])
+    area1[ievt] = np.sum(current_data[0:1000])
     # integral of the pulse
-    area2[ievt] = np.sum(current_data[1000:1100]) - np.average(current_data[0:1000])
+    area2[ievt] = np.sum(current_data) - np.average(current_data[0:1000])
     # integral of after-pulse
-    area3[ievt] = np.sum(current_data[1100:4096]) - np.average(current_data[0:1000])
+    area3[ievt] = np.sum(current_data[1000:1100])
     # pulse_fit
-    pulse_fit[ievt] = fit_pulse(1020,1)
+    popt, pcov = curve_fit(fit_pulse, xx, current_data,
+                           sigma=sig, absolute_sigma=True)
+    pulse_fit[ievt] = popt[0]
 """
 Calculating all amplitude estimators.
 """
 
-amp1*=1000 # convert from V to mV   
-amp2*=1000  # the one from Appendix B
-area1*=1000
-area2*=1000
-area3*=1000
-pulse_fit*=1000
+# converting from V to mV
+for amp in amps:
+    amp *= 1000
 
-amp1 = amp2
+# amp1 = amp2
 
 num_bins1=25
 bin_range1=(0.08,0.4)
+p=(100,0.01,0.4,5) # (a,b,c,d) ???????
 
 # num_bins2=25
 # bin_range2=(0.08,0.4)
@@ -102,7 +115,8 @@ These two values were picked by trial and error. You'll
 likely want different values for each estimator.
 """
 
-n1, bin_edges1, _ = plt.hist(amp1, bins=num_bins1, range=bin_range1, color='k', histtype='step', label='Data')
+n1, bin_edges1, _ = plt.hist(amp1, bins=num_bins1, range=bin_range1, color='k', \
+                             histtype='step', label='Data')
 # n2, bin_edges2, _ = plt.hist(amp2, bins=num_bins2, range=bin_range2, color='k', histtype='step', label='Data')
 # This plots the histogram AND saves the counts and bin_edges for later use
 
@@ -151,11 +165,11 @@ y_bestfit1 = myGauss(x_bestfit1, *popt1)
 fontsize=12
 plt.plot(x_bestfit1, y_bestfit1, label='Fit')
 plt.title("amp2")
-plt.text(0.01, 140, r'$\mu$ = %3.2f mV'%(popt1[1]), fontsize=fontsize)
-plt.text(0.01, 120, r'$\sigma$ = %3.2f mV'%(popt1[2]), fontsize=fontsize)
-plt.text(0.01, 100, r'$\chi^2$/DOF=', fontsize=fontsize)
-plt.text(0.01, 80, r'%3.2f/%i'%(chisquared1,dof1), fontsize=fontsize)
-plt.text(0.01, 60, r'$\chi^2$ prob.= %1.1f'%(1-chi2.cdf(chisquared1,dof1)), fontsize=fontsize)
+# plt.text(0.01, 140, r'$\mu$ = %3.2f mV'%(popt1[1]), fontsize=fontsize)
+# plt.text(0.01, 120, r'$\sigma$ = %3.2f mV'%(popt1[2]), fontsize=fontsize)
+# plt.text(0.01, 100, r'$\chi^2$/DOF=', fontsize=fontsize)
+# plt.text(0.01, 80, r'%3.2f/%i'%(chisquared1,dof1), fontsize=fontsize)
+# plt.text(0.01, 60, r'$\chi^2$ prob.= %1.1f'%(1-chi2.cdf(chisquared1,dof1)), fontsize=fontsize)
 plt.legend(loc=1)
 plt.show()
 
