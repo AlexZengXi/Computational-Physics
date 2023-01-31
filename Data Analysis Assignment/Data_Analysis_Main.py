@@ -98,22 +98,9 @@ Calculating all amplitude estimators.
 for amp in amps:
     amp *= 1000
 
-num_bins=[25,25,25,25,25,25,]
-bin_range=[(0.08,0.4), (0.08,0.4), (0.08,0.4),
-           (0.08,0.4), (0.08,0.4), (0.08,0.4)]
-p=(100,0.01,0.4,5) # (a,b,c,d) ???????
-
-# num_bins2=25
-# bin_range2=(0.08,0.4)
-"""
-These two values were picked by trial and error. You'll 
-likely want different values for each estimator.
-"""
-
-def plotting(num_bins1, bin_range1, amps):
-    n1, bin_edges1, _ = plt.hist(amp1, bins=num_bins1, range=bin_range1, color='k', \
+def plotting(num_bins1, bin_range1, amps, p, title):
+    n1, bin_edges1, _ = plt.hist(amps, bins=num_bins1, range=bin_range1,
                                  histtype='step', label='Data')
-    # n2, bin_edges2, _ = plt.hist(amp2, bins=num_bins2, range=bin_range2, color='k', histtype='step', label='Data')
     # This plots the histogram AND saves the counts and bin_edges for later use
 
     plt.xlabel('Energy Estimator: Maximum Value (mV)')
@@ -141,7 +128,7 @@ def plotting(num_bins1, bin_range1, amps):
     # This adds errorbars to the histograms, where each uncertainty is sqrt(y)
 
     popt1, pcov1 = curve_fit(myGauss, bin_centers1, n1,
-                             sigma=sig1, p0=(100, 0.25, 0.05, 5), absolute_sigma=True)
+                             sigma=sig1, p0=p, absolute_sigma=True)
     n1_fit = myGauss(bin_centers1, *popt1)
     """
     n1_fit is our best fit line using our data points.
@@ -160,18 +147,38 @@ def plotting(num_bins1, bin_range1, amps):
 
     fontsize = 12
     plt.plot(x_bestfit1, y_bestfit1, label='Fit')
-    plt.title("amp2")
-    # plt.text(0.01, 140, r'$\mu$ = %3.2f mV'%(popt1[1]), fontsize=fontsize)
+    plt.title(title)
+    plt.text(0.01, 140, r'$\mu$ = %3.2f mV'%(popt1[1]), fontsize=fontsize)
     # plt.text(0.01, 120, r'$\sigma$ = %3.2f mV'%(popt1[2]), fontsize=fontsize)
     # plt.text(0.01, 100, r'$\chi^2$/DOF=', fontsize=fontsize)
     # plt.text(0.01, 80, r'%3.2f/%i'%(chisquared1,dof1), fontsize=fontsize)
-    # plt.text(0.01, 60, r'$\chi^2$ prob.= %1.1f'%(1-chi2.cdf(chisquared1,dof1)), fontsize=fontsize)
+    plt.text(0.01, 60, r'$\chi^2$ prob.= %1.1f'%(1-chi2.cdf(chisquared1,dof1)), fontsize=fontsize)
+    # find least sigma
+    print(title, ' chi2: ', 1-chi2.cdf(chisquared1,dof1), '   sigma: ', popt1[1])
     plt.legend(loc=1)
     plt.show()
 
+# graph 3
+num_bins_1=60
+bin_range_1=(0.25, 0.4)
+p_1=(60, 0.31, 0.05, 5)        # myGauss(x, A, mean, width, base)
+plotting(num_bins_1, bin_range_1, amp1, p_1, 'amp 1')
 
-for i in range(len(amp)):
-    plotting(num_bins[i],bin_range[i],amp[i])
+# graph 2
+num_bins_2=25
+bin_range_2=(0.08, 0.4)
+p_2=(230, 0.25, 0.1, 5)        # myGauss(x, A, mean, width, base)
+plotting(num_bins_2, bin_range_2, amp2, p_2, 'amp 2')
+
+# graph 3
+num_bins_3=40
+bin_range_3=(-100, 100)
+p_3=(200,0,100,5)        # myGauss(x, A, mean, width, base)
+plotting(num_bins_3, bin_range_3, area1, p_3, 'amp 3')
+
+
+
+
 """
 Look how bad that chi-squared value (and associated probability) is!
 If you look closely, the first 5 data points (on the left) are

@@ -158,6 +158,7 @@ def main(num_bins1, bin_range1, amps, p):
     # plt.text(0.01, 80, r'%3.2f/%i'%(chisquared1,dof1), fontsize=fontsize)
     # plt.text(0.01, 60, r'$\chi^2$ prob.= %1.1f'%(1-chi2.cdf(chisquared1,dof1)), fontsize=fontsize)
     plt.legend(loc=1)
+    plt.title('main')
     plt.show()
     # plt.figure()
     
@@ -225,6 +226,7 @@ def MAIN(popt1, num_bins1, bin_range1, amps, a,b,c,d):
     # plt.text(0.01, 80, r'%3.2f/%i'%(chisquared1,dof1), fontsize=fontsize)
     # plt.text(0.01, 60, r'$\chi^2$ prob.= %1.1f'%(1-chi2.cdf(chisquared1,dof1)), fontsize=fontsize)
     plt.legend(loc=1)
+    plt.title('MAIN')
     plt.show()
     
     Eest = [conv , popt1[2], (1-chi2.cdf(chisquared1,dof1))]
