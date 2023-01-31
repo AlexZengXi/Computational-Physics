@@ -29,11 +29,11 @@ def fit_pulse(x, A):
     return A*np.interp(x, xx, _pulse_template)
 # fit_pulse can be used by curve_fit to fit a pulse to the pulse_shape
 
-with open("/Users/gabrielmiyazawa/Desktop/PHY324/Fit/calibration_p3.pkl","rb") as file:
+with open("calibration_p3.pkl","rb") as file:
     calibration_data=pickle.load(file)
-with open("/Users/gabrielmiyazawa/Desktop/PHY324/Fit/signal_p3.pkl","rb") as file:
+with open("signal_p3.pkl","rb") as file:
     signal=pickle.load(file)
-with open("/Users/gabrielmiyazawa/Desktop/PHY324/Fit/noise_p3.pkl","rb") as file:
+with open("noise_p3.pkl","rb") as file:
     noise=pickle.load(file)
 
 pulse_template = pulse_shape(20,80)

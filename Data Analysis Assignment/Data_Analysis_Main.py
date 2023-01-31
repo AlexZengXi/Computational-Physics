@@ -29,6 +29,7 @@ def fit_pulse(x, A):
     return A*np.interp(x, xx, _pulse_template)
 # fit_pulse can be used by curve_fit to fit a pulse to the pulse_shape
 
+
 with open("calibration_p3.pkl","rb") as file:
     calibration_data=pickle.load(file)
 with open("noise_p3.pkl","rb") as file:
@@ -97,10 +98,9 @@ Calculating all amplitude estimators.
 for amp in amps:
     amp *= 1000
 
-amp1 = amp2
-
-num_bins1=25
-bin_range1=(0.08,0.4)
+num_bins=[25,25,25,25,25,25,]
+bin_range=[(0.08,0.4), (0.08,0.4), (0.08,0.4),
+           (0.08,0.4), (0.08,0.4), (0.08,0.4)]
 p=(100,0.01,0.4,5) # (a,b,c,d) ???????
 
 # num_bins2=25
@@ -110,64 +110,68 @@ These two values were picked by trial and error. You'll
 likely want different values for each estimator.
 """
 
-n1, bin_edges1, _ = plt.hist(amp1, bins=num_bins1, range=bin_range1, color='k', \
-                             histtype='step', label='Data')
-# n2, bin_edges2, _ = plt.hist(amp2, bins=num_bins2, range=bin_range2, color='k', histtype='step', label='Data')
-# This plots the histogram AND saves the counts and bin_edges for later use
+def plotting(num_bins1, bin_range1, amps):
+    n1, bin_edges1, _ = plt.hist(amp1, bins=num_bins1, range=bin_range1, color='k', \
+                                 histtype='step', label='Data')
+    # n2, bin_edges2, _ = plt.hist(amp2, bins=num_bins2, range=bin_range2, color='k', histtype='step', label='Data')
+    # This plots the histogram AND saves the counts and bin_edges for later use
 
-plt.xlabel('Energy Estimator: Maximum Value (mV)')
-plt.ylabel('Events / %2.2f mV'%((bin_range1[-1]-bin_range1[0])/num_bins1));
-plt.xlim(bin_range1)  
-# If the legend covers some data, increase the plt.xlim value, maybe (0,0.5)
+    plt.xlabel('Energy Estimator: Maximum Value (mV)')
+    plt.ylabel('Events / %2.2f mV' % ((bin_range1[-1] - bin_range1[0]) / num_bins1));
+    plt.xlim(bin_range1)
+    # If the legend covers some data, increase the plt.xlim value, maybe (0,0.5)
 
-bin_centers1 = 0.5*(bin_edges1[1:]+bin_edges1[:-1])
-"""
-This gives us the x-data which are the centres of each bin.
-This is visually better for plotting errorbars.
-More important, it's the correct thing to do for fitting the
-Gaussian to our histogram.
-It also fixes the shape -- len(n1) < len(bin_edges1) so we
-cannot use 
-plt.plot(n1, bin_edges1)
-as it will give us a shape error.
-"""
+    bin_centers1 = 0.5 * (bin_edges1[1:] + bin_edges1[:-1])
+    """
+    This gives us the x-data which are the centres of each bin.
+    This is visually better for plotting errorbars.
+    More important, it's the correct thing to do for fitting the
+    Gaussian to our histogram.
+    It also fixes the shape -- len(n1) < len(bin_edges1) so we
+    cannot use 
+    plt.plot(n1, bin_edges1)
+    as it will give us a shape error.
+    """
 
-sig1 = np.sqrt(n1)
-sig1=np.where(sig1==0, 1, sig1) 
-# The uncertainty on 0 count is 1, not 0. Replace all 0s with 1s.
+    sig1 = np.sqrt(n1)
+    sig1 = np.where(sig1 == 0, 1, sig1)
+    # The uncertainty on 0 count is 1, not 0. Replace all 0s with 1s.
 
-plt.errorbar(bin_centers1, n1, yerr=sig1, fmt='none', c='k')
-# This adds errorbars to the histograms, where each uncertainty is sqrt(y)
+    plt.errorbar(bin_centers1, n1, yerr=sig1, fmt='none', c='k')
+    # This adds errorbars to the histograms, where each uncertainty is sqrt(y)
 
-popt1, pcov1 = curve_fit(myGauss, bin_centers1, n1, 
-             sigma = sig1, p0=(100,0.25,0.05,5), absolute_sigma=True)
-n1_fit = myGauss(bin_centers1, *popt1)
-"""
-n1_fit is our best fit line using our data points.
-Note that if you have few enough bins, this best fit
-line will have visible bends which look bad, so you
-should not plot n1_fit directly. See below.
-"""
+    popt1, pcov1 = curve_fit(myGauss, bin_centers1, n1,
+                             sigma=sig1, p0=(100, 0.25, 0.05, 5), absolute_sigma=True)
+    n1_fit = myGauss(bin_centers1, *popt1)
+    """
+    n1_fit is our best fit line using our data points.
+    Note that if you have few enough bins, this best fit
+    line will have visible bends which look bad, so you
+    should not plot n1_fit directly. See below.
+    """
 
-chisquared1 = np.sum( ((n1 - n1_fit)/sig1 )**2)
-dof1 = num_bins1 - len(popt1)
-# Number of degrees of freedom is the number of data points less the number of fitted parameters
+    chisquared1 = np.sum(((n1 - n1_fit) / sig1) ** 2)
+    dof1 = num_bins1 - len(popt1)
+    # Number of degrees of freedom is the number of data points less the number of fitted parameters
 
-x_bestfit1 = np.linspace(bin_edges1[0], bin_edges1[-1], 1000)
-y_bestfit1 = myGauss(x_bestfit1, *popt1) 
-# Best fit line smoothed with 1000 datapoints. Don't use best fit lines with 5 or 10 data points!
+    x_bestfit1 = np.linspace(bin_edges1[0], bin_edges1[-1], 1000)
+    y_bestfit1 = myGauss(x_bestfit1, *popt1)
+    # Best fit line smoothed with 1000 datapoints. Don't use best fit lines with 5 or 10 data points!
 
-fontsize=12
-plt.plot(x_bestfit1, y_bestfit1, label='Fit')
-plt.title("amp2")
-# plt.text(0.01, 140, r'$\mu$ = %3.2f mV'%(popt1[1]), fontsize=fontsize)
-# plt.text(0.01, 120, r'$\sigma$ = %3.2f mV'%(popt1[2]), fontsize=fontsize)
-# plt.text(0.01, 100, r'$\chi^2$/DOF=', fontsize=fontsize)
-# plt.text(0.01, 80, r'%3.2f/%i'%(chisquared1,dof1), fontsize=fontsize)
-# plt.text(0.01, 60, r'$\chi^2$ prob.= %1.1f'%(1-chi2.cdf(chisquared1,dof1)), fontsize=fontsize)
-plt.legend(loc=1)
-plt.show()
+    fontsize = 12
+    plt.plot(x_bestfit1, y_bestfit1, label='Fit')
+    plt.title("amp2")
+    # plt.text(0.01, 140, r'$\mu$ = %3.2f mV'%(popt1[1]), fontsize=fontsize)
+    # plt.text(0.01, 120, r'$\sigma$ = %3.2f mV'%(popt1[2]), fontsize=fontsize)
+    # plt.text(0.01, 100, r'$\chi^2$/DOF=', fontsize=fontsize)
+    # plt.text(0.01, 80, r'%3.2f/%i'%(chisquared1,dof1), fontsize=fontsize)
+    # plt.text(0.01, 60, r'$\chi^2$ prob.= %1.1f'%(1-chi2.cdf(chisquared1,dof1)), fontsize=fontsize)
+    plt.legend(loc=1)
+    plt.show()
 
+
+for i in range(len(amp)):
+    plotting(num_bins[i],bin_range[i],amp[i])
 """
 Look how bad that chi-squared value (and associated probability) is!
 If you look closely, the first 5 data points (on the left) are
@@ -189,49 +193,6 @@ sigma value will be the energy resolution of this energy estimator.
 
 Note: you should show this before/after conversion for your first
 energy estimator. To save space, only show the after histograms for
-the remaining 5 energy estimators.
+the remaining 5 energy estimators.ß
 """
 
-conversion_factor1 = 1000
-energy_amp1 = amp1 * conversion_factor1
-
-n1, bin_edges1, _ = plt.hist(energy_amp1, bins=num_bins1, range=bin_range1, color='k', histtype='step', label='Data')
-# n2, bin_edges2, _ = plt.hist(amp2, bins=num_bins2, range=bin_range2, color='k', histtype='step', label='Data')
-# This plots the histogram AND saves the counts and bin_edges for later use
-
-plt.xlabel('Energy Estimator: Maximum Value (mV)')
-plt.ylabel('Events / %2.2f mV'%((bin_range1[-1]-bin_range1[0])/num_bins1));
-plt.xlim(bin_range1)
-# If the legend covers some data, increase the plt.xlim value, maybe (0,0.5)
-
-bin_centers1 = 0.5*(bin_edges1[1:]+bin_edges1[:-1])
-
-sig1 = np.sqrt(n1)
-sig1=np.where(sig1==0, 1, sig1)
-# The uncertainty on 0 count is 1, not 0. Replace all 0s with 1s.
-
-plt.errorbar(bin_centers1, n1, yerr=sig1, fmt='none', c='k')
-# This adds errorbars to the histograms, where each uncertainty is sqrt(y)
-
-popt1, pcov1 = curve_fit(myGauss, bin_centers1, n1,
-             sigma = sig1, p0=(100,0.25,0.05,5), absolute_sigma=True)
-n1_fit = myGauss(bin_centers1, *popt1)
-
-chisquared1 = np.sum( ((n1 - n1_fit)/sig1 )**2)
-dof1 = num_bins1 - len(popt1)
-# Number of degrees of freedom is the number of data points less the number of fitted parameters
-
-x_bestfit1 = np.linspace(bin_edges1[0], bin_edges1[-1], 1000)
-y_bestfit1 = myGauss(x_bestfit1, *popt1)
-# Best fit line smoothed with 1000 datapoints. Don't use best fit lines with 5 or 10 data points!
-
-fontsize=12
-plt.plot(x_bestfit1, y_bestfit1, label='Fit')
-plt.title("amp2 version 2")
-plt.text(0.01, 140, r'$\mu$ = %3.2f mV'%(popt1[1]), fontsize=fontsize)
-plt.text(0.01, 120, r'$\sigma$ = %3.2f mV'%(popt1[2]), fontsize=fontsize)
-plt.text(0.01, 100, r'$\chi^2$/DOF=', fontsize=fontsize)
-plt.text(0.01, 80, r'%3.2f/%i'%(chisquared1,dof1), fontsize=fontsize)
-plt.text(0.01, 60, r'$\chi^2$ prob.= %1.1f'%(1-chi2.cdf(chisquared1,dof1)), fontsize=fontsize)
-plt.legend(loc=1)
-plt.show()
