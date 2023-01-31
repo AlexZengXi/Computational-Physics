@@ -31,12 +31,12 @@ for i in range(len(trial)):
 # for i in range(len(datas)):
 #     plt.plot(ts[i], datas[i])
 print('t[2]: ', ts[2])
-env_t = np.linspace(0, 800, 800000, endpoint = True)
-plt.plot(env_t, signal.square(2 * np.pi * 5 * env_t))
+env_t = np.linspace(0, 800, 10, endpoint = True)
+plt.plot(env_t, signal.square(2 * np.pi * 5 * env_t)+30)
 
 
 plt.plot(ts[2],datas[2])
-plt.ylim(20,65)
+# plt.ylim(20,65)
 plt.show()
 
 # popt2, pcov2 = curve_fit(j0, ts[2], datas[2])
