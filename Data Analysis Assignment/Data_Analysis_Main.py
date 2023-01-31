@@ -65,10 +65,10 @@ These are the 6 energy estimators as empty arrays of the correct size.
 """
 
 stds = []
-for i in range(len(noise)):
-    stds.append(np.std(noise['evt_%i'%i]))
+for i in range(len(noise_data)):
+    stds.append(np.std(noise_data['evt_%i'%i]))
 std = np.mean(stds)
-sig = np.full(len(noise['evt_0']), std)
+sig = np.full(len(noise_data['evt_0']), std)
 sig = np.where(sig==0, 1, sig)
 """
 calculating the std of the noise
@@ -76,21 +76,16 @@ calculating the std of the noise
 QUESTION: what is np.where for?
 """
 
-
+xx=np.linspace(0, 4095, 4096)
 for ievt in range(1000):
     current_data = calibration_data['evt_%i'%ievt]
 
-    # max-min
     amp1[ievt] = np.max(current_data) - np.min(current_data)
     # max-baseline, where baseline: average of the pre-pulse region
     amp2[ievt] = np.max(current_data) - np.average(current_data[0:1000])
-    # integral of pre-pulse
     area1[ievt] = np.sum(current_data[0:1000])
-    # integral of the pulse
     area2[ievt] = np.sum(current_data) - np.average(current_data[0:1000])
-    # integral of after-pulse
     area3[ievt] = np.sum(current_data[1000:1100])
-    # pulse_fit
     popt, pcov = curve_fit(fit_pulse, xx, current_data,
                            sigma=sig, absolute_sigma=True)
     pulse_fit[ievt] = popt[0]
@@ -102,7 +97,7 @@ Calculating all amplitude estimators.
 for amp in amps:
     amp *= 1000
 
-# amp1 = amp2
+amp1 = amp2
 
 num_bins1=25
 bin_range1=(0.08,0.4)
