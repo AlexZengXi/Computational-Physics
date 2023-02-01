@@ -153,21 +153,27 @@ def plotting(num_bins1, bin_range1, amps, p, title):
     # plt.text(0.01, 100, r'$\chi^2$/DOF=', fontsize=fontsize)
     # plt.text(0.01, 80, r'%3.2f/%i'%(chisquared1,dof1), fontsize=fontsize)
     plt.text(0.01, 60, r'$\chi^2$ prob.= %1.1f'%(1-chi2.cdf(chisquared1,dof1)), fontsize=fontsize)
-    # find least sigma
-    print(title, ' chi2: ', 1-chi2.cdf(chisquared1,dof1), '   sigma: ', popt1[1])
+
+
+    # find smallest sigma
+    print(title, ' chi2: ', "{:.4f}".format(1-chi2.cdf(chisquared1,dof1)),
+          '   sigma: ', "{:00.4f}".format(popt1[2]),
+          '   mu: ', "{:00.4f}".format(popt1[1]))
+    # sigmal: std (around 90%), mu: mean, chi2 (around 1)
+
     plt.legend(loc=1)
     plt.show()
 
-# graph 3
+# graph 1
 num_bins_1=60
 bin_range_1=(0.25, 0.4)
-p_1=(60, 0.31, 0.05, 5)        # myGauss(x, A, mean, width, base)
+p_1=(60, 0.31, 0.07, 5)        # myGauss(x, A, mean, width, base)
 plotting(num_bins_1, bin_range_1, amp1, p_1, 'amp 1')
 
 # graph 2
-num_bins_2=25
-bin_range_2=(0.15, 0.32)
-p_2=(230, 0.25, 0.1, 5)        # myGauss(x, A, mean, width, base)
+num_bins_2=45
+bin_range_2=(0.16, 0.33)
+p_2=(200, 0.23, 0.1, 7)        # myGauss(x, A, mean, width, base)
 plotting(num_bins_2, bin_range_2, amp2, p_2, 'amp 2')
 
 # graph 3
