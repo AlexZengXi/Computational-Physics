@@ -311,12 +311,12 @@ p_2_c=(50, 10, 2, 5)        # myGauss(x, A, mean, width, base)
 #                           num_bins_2_c, bin_range_2_c, amp2, p_2_c, 'amp 2')
 
 # graph 3
-num_bins_3=40
-bin_range_3=(-100, 100)
-p_3=(200,0,50,0)        # myGauss(x, A, mean, width, base)
-num_bins_3_c=20
+num_bins_3=35
+bin_range_3=(-50, 50)
+p_3=(120,0,40,0)        # myGauss(x, A, mean, width, base)
+num_bins_3_c=50
 bin_range_3_c=(-200, 200)
-p_3_c=(150, 10, 10, 0)        # myGauss(x, A, mean, width, base)
+p_3_c=(1, 10, 20, 0)        # myGauss(x, A, mean, width, base)
 plotting_with_calibration(plotting(num_bins_3, bin_range_3, area1, p_3, 'area 1'),
                           num_bins_3_c, bin_range_3_c, area1, p_3_c, 'area 1')
 
