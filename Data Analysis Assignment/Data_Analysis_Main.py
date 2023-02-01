@@ -147,7 +147,7 @@ def plotting(num_bins1, bin_range1, amps, p, title):
 
     fontsize = 12
     plt.plot(x_bestfit1, y_bestfit1, label='Fit')
-    plt.title(title)
+    plt.title('original '+ title)
     plt.text(0.01, 140, r'$\mu$ = %3.2f mV'%(popt1[1]), fontsize=fontsize)
     # plt.text(0.01, 120, r'$\sigma$ = %3.2f mV'%(popt1[2]), fontsize=fontsize)
     # plt.text(0.01, 100, r'$\chi^2$/DOF=', fontsize=fontsize)
@@ -164,48 +164,45 @@ def plotting(num_bins1, bin_range1, amps, p, title):
     plt.legend(loc=1)
     plt.show()
 
+    return popt1[1], num_bins1, bin_range1, amps, p, title
+
 # graph 1
 num_bins_1=60
 bin_range_1=(0.25, 0.4)
 p_1=(60, 0.31, 0.07, 5)        # myGauss(x, A, mean, width, base)
-plotting(num_bins_1, bin_range_1, amp1, p_1, 'amp 1')
+# plotting(num_bins_1, bin_range_1, amp1, p_1, 'amp 1')
 
 # graph 2
 num_bins_2=45
 bin_range_2=(0.16, 0.33)
 p_2=(200, 0.23, 0.1, 7)        # myGauss(x, A, mean, width, base)
-plotting(num_bins_2, bin_range_2, amp2, p_2, 'amp 2')
+# plotting(num_bins_2, bin_range_2, amp2, p_2, 'amp 2')
 
 # graph 3
 num_bins_3=40
 bin_range_3=(-100, 100)
 p_3=(200,0,100,5)        # myGauss(x, A, mean, width, base)
-plotting(num_bins_3, bin_range_3, area1, p_3, 'amp 3')
+# plotting(num_bins_3, bin_range_3, area1, p_3, 'amp 3')
 
 # graph 4
 num_bins_4=40
 bin_range_4=(-200, 200)
 p_4=(100,50,150,0)        # myGauss(x, A, mean, width, base)
-plotting(num_bins_4, bin_range_4, area2, p_4, 'amp 4')
+# plotting(num_bins_4, bin_range_4, area2, p_4, 'amp 4')
 
 # graph 5
 num_bins_5=80
 bin_range_5=(-50, 80)
 p_5=(300,21,50,0)        # myGauss(x, A, mean, width, base)
-plotting(num_bins_5, bin_range_5, area3, p_5, 'amp 5')
+# plotting(num_bins_5, bin_range_5, area3, p_5, 'amp 5')
 
 # graph 6
 num_bins_6=80
 bin_range_6=(-5, 5)
 p_6=(800,0,1,0)        # myGauss(x, A, mean, width, base)
-plotting(num_bins_6, bin_range_6, pulse_fit, p_6, 'amp 6')
+# plotting(num_bins_6, bin_range_6, pulse_fit, p_6, 'amp 6')
 
 """
-Look how bad that chi-squared value (and associated probability) is!
-If you look closely, the first 5 data points (on the left) are
-responsible for about half of the chi-squared value. It might be
-worth excluding them from the fit and subsequent plot.
-
 Now your task is to find the calibration factor which converts the
 x-axis of this histogram from mV to keV such that the peak (mu) is 
 by definition at 10 keV. You do this by scaling each estimator (i.e.
@@ -221,6 +218,88 @@ sigma value will be the energy resolution of this energy estimator.
 
 Note: you should show this before/after conversion for your first
 energy estimator. To save space, only show the after histograms for
-the remaining 5 energy estimators.ß
+the remaining 5 energy estimators.
 """
 
+def plotting_with_calibration(popt1, num_bins1, bin_range1, amps, p, title):
+
+    conv = 10 / popt1[1]  # conversion factor
+    amps *= conv
+
+
+    n1, bin_edges1, _ = plt.hist(amps, bins=num_bins1, range=bin_range1,
+                                 histtype='step', label='Data')
+    # This plots the histogram AND saves the counts and bin_edges for later use
+
+    plt.xlabel('Energy Estimator: Maximum Value (mV)')
+    plt.ylabel('Events / %2.2f mV' % ((bin_range1[-1] - bin_range1[0]) / num_bins1));
+    plt.xlim(bin_range1)
+    # If the legend covers some data, increase the plt.xlim value, maybe (0,0.5)
+
+    bin_centers1 = 0.5 * (bin_edges1[1:] + bin_edges1[:-1])
+    """
+    This gives us the x-data which are the centres of each bin.
+    This is visually better for plotting errorbars.
+    More important, it's the correct thing to do for fitting the
+    Gaussian to our histogram.
+    It also fixes the shape -- len(n1) < len(bin_edges1) so we
+    cannot use 
+    plt.plot(n1, bin_edges1)
+    as it will give us a shape error.
+    """
+
+    sig1 = np.sqrt(n1)
+    sig1 = np.where(sig1 == 0, 1, sig1)
+    # The uncertainty on 0 count is 1, not 0. Replace all 0s with 1s.
+
+    plt.errorbar(bin_centers1, n1, yerr=sig1, fmt='none', c='k')
+    # This adds errorbars to the histograms, where each uncertainty is sqrt(y)
+
+    popt1, pcov1 = curve_fit(myGauss, bin_centers1, n1,
+                             sigma=sig1, p0=p, absolute_sigma=True)
+    n1_fit = myGauss(bin_centers1, *popt1)
+    """
+    n1_fit is our best fit line using our data points.
+    Note that if you have few enough bins, this best fit
+    line will have visible bends which look bad, so you
+    should not plot n1_fit directly. See below.
+    """
+
+    chisquared1 = np.sum(((n1 - n1_fit) / sig1) ** 2)
+    dof1 = num_bins1 - len(popt1)
+    # Number of degrees of freedom is the number of data points less the number of fitted parameters
+
+    x_bestfit1 = np.linspace(bin_edges1[0], bin_edges1[-1], 1000)
+    y_bestfit1 = myGauss(x_bestfit1, *popt1)
+    # Best fit line smoothed with 1000 datapoints. Don't use best fit lines with 5 or 10 data points!
+
+    fontsize = 12
+    plt.plot(x_bestfit1, y_bestfit1, label='Fit')
+    plt.title('calibration', title)
+    plt.text(0.01, 140, r'$\mu$ = %3.2f mV'%(popt1[1]), fontsize=fontsize)
+    # plt.text(0.01, 120, r'$\sigma$ = %3.2f mV'%(popt1[2]), fontsize=fontsize)
+    # plt.text(0.01, 100, r'$\chi^2$/DOF=', fontsize=fontsize)
+    # plt.text(0.01, 80, r'%3.2f/%i'%(chisquared1,dof1), fontsize=fontsize)
+    plt.text(0.01, 60, r'$\chi^2$ prob.= %1.1f'%(1-chi2.cdf(chisquared1,dof1)), fontsize=fontsize)
+
+
+    # find smallest sigma
+    print(title, ' chi2: ', "{:.4f}".format(1-chi2.cdf(chisquared1,dof1)),
+          '   sigma: ', "{:00.4f}".format(popt1[2]),
+          '   mu: ', "{:00.4f}".format(popt1[1]))
+    # sigmal: std (around 90%), mu: mean, chi2 (around 1)
+
+    plt.legend(loc=1)
+    plt.show()
+
+
+num_bins_1=60
+bin_range_1=(0.25, 0.4)
+p_1=(60, 0.31, 0.07, 5)        # myGauss(x, A, mean, width, base)
+
+num_bins_1_c=40
+bin_range_1_c=(0, 20)
+p_1_c=(100, 10, 2, 0)        # myGauss(x, A, mean, width, base)
+
+plotting_with_calibration(plotting(num_bins_1, bin_range_1, amp1, p_1, 'amp 1')[:2],
+                          num_bins_1_c, bin_range_1_c, amp1, p_1_c, 'amp 1')
