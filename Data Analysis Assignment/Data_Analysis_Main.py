@@ -332,14 +332,14 @@ p_4_c=(150, 10, 100, 0)        # myGauss(x, A, mean, width, base)
 #                           num_bins_4_c, bin_range_4_c, area2, p_4_c, 'area 2')
 
 # graph 5
-num_bins_5=80
-bin_range_5=(-50, 80)
-p_5=(300,21,50,0)        # myGauss(x, A, mean, width, base)
+num_bins_5=40
+bin_range_5=(10, 22)
+p_5=(60,10,5,0)        # myGauss(x, A, mean, width, base)
 num_bins_5_c=40
-bin_range_5_c=(0, 20)
+bin_range_5_c=(2, 15)
 p_5_c=(300,10,5,0)        # myGauss(x, A, mean, width, base)
-plotting_with_calibration(plotting(num_bins_5, bin_range_5, area3, p_5, 'area 2'),
-                          num_bins_5_c, bin_range_5_c, area3, p_5_c, 'area 2')
+# plotting_with_calibration(plotting(num_bins_5, bin_range_5, area3, p_5, 'area 2'),
+#                           num_bins_5_c, bin_range_5_c, area3, p_5_c, 'area 2')
 
 # graph 6
 num_bins_6=80
