@@ -318,28 +318,20 @@ p_3=(200,0,100,5)        # myGauss(x, A, mean, width, base)
 num_bins_3_c=40
 bin_range_3_c=(60, 90)
 p_3_c=(2, 74, 1, 0)        # myGauss(x, A, mean, width, base)
-# plotting_with_calibration(plotting(num_bins_3, bin_range_3, area1, p_3, 'area 1'),
-#                           num_bins_3_c, bin_range_3_c, area1, p_3_c, 'area 1')
+plotting_with_calibration(plotting(num_bins_3, bin_range_3, area1, p_3, 'area 1'),
+                          num_bins_3_c, bin_range_3_c, area1, p_3_c, 'area 1')
 
 # graph 4
 num_bins_4=40
 bin_range_4=(-200, 200)
 p_4=(100,50,150,0)        # myGauss(x, A, mean, width, base)
-num_bins_4_c=40
-bin_range_4_c=(-100, 100)
-p_4_c=(150, 10, 100, 0)        # myGauss(x, A, mean, width, base)
-# plotting_with_calibration(plotting(num_bins_4, bin_range_4, area2, p_4, 'area 2'),
-#                           num_bins_4_c, bin_range_4_c, area2, p_4_c, 'area 2')
+# plotting(num_bins_4, bin_range_4, area2, p_4, 'amp 4')
 
 # graph 5
 num_bins_5=80
 bin_range_5=(-50, 80)
 p_5=(300,21,50,0)        # myGauss(x, A, mean, width, base)
-num_bins_5_c=80
-bin_range_5_c=(-50, 80)
-p_5_c=(300,21,50,0)        # myGauss(x, A, mean, width, base)
-plotting_with_calibration(plotting(num_bins_5, bin_range_5, area3, p_5, 'area 2'),
-                          num_bins_5_c, bin_range_5_c, area3, p_5_c, 'area 2')
+# plotting(num_bins_5, bin_range_5, area3, p_5, 'amp 5')
 
 # graph 6
 num_bins_6=80
