@@ -335,9 +335,9 @@ p_4_c=(150, 10, 100, 0)        # myGauss(x, A, mean, width, base)
 num_bins_5=80
 bin_range_5=(-50, 80)
 p_5=(300,21,50,0)        # myGauss(x, A, mean, width, base)
-num_bins_5_c=80
-bin_range_5_c=(-50, 80)
-p_5_c=(300,21,50,0)        # myGauss(x, A, mean, width, base)
+num_bins_5_c=40
+bin_range_5_c=(0, 20)
+p_5_c=(300,10,5,0)        # myGauss(x, A, mean, width, base)
 plotting_with_calibration(plotting(num_bins_5, bin_range_5, area3, p_5, 'area 2'),
                           num_bins_5_c, bin_range_5_c, area3, p_5_c, 'area 2')
 
