@@ -53,7 +53,6 @@ Always a good idea to look at some of your data before analysing it!
 It also plots our pulse template which has been scaled to be slightly 
 larger than any of the actual pulses to make it visible.
 """
-org1=np.zeros(1000)
 amp1=np.zeros(1000)     # max-min
 amp2=np.zeros(1000)     # max-baseline
 area1=np.zeros(1000)    # integral of pre-pulse
@@ -156,7 +155,7 @@ def plotting(num_bins1, bin_range1, amps, p, title):
 
 
     # find smallest sigma
-    print('c_', title, ' chi2: ', "{:.4f}".format(1-chi2.cdf(chisquared1,dof1)),
+    print('o_', title, ' chi2: ', "{:.4f}".format(1-chi2.cdf(chisquared1,dof1)),
           '   sigma: ', "{:00.4f}".format(popt1[2]),
           '   mu: ', "{:00.4f}".format(popt1[1]))
     # sigmal: std (around 90%), mu: mean, chi2 (around 1)
@@ -298,8 +297,8 @@ p_1=[60, 0.31, 0.07, 5]        # myGauss(x, A, mean, width, base)
 num_bins_1_c=35
 bin_range_1_c=(7, 13)
 p_1_c=[80, 10, 2, 0]        # myGauss(x, A, mean, width, base)
-# plotting_with_calibration(plotting(num_bins_1, bin_range_1, amp1, p_1, 'amp 1'),
-#                           num_bins_1_c, bin_range_1_c, amp1, p_1_c, 'amp 1')
+plotting_with_calibration(plotting(num_bins_1, bin_range_1, amp1, p_1, 'amp 1'),
+                          num_bins_1_c, bin_range_1_c, amp1, p_1_c, 'amp 1')
 
 # graph 2
 num_bins_2=35
@@ -308,8 +307,8 @@ p_2=(200, 0.23, 0.1, 7)        # myGauss(x, A, mean, width, base)
 num_bins_2_c=25
 bin_range_2_c=(8, 12)
 p_2_c=(50, 10, 2, 5)        # myGauss(x, A, mean, width, base)
-# plotting_with_calibration(plotting(num_bins_2, bin_range_2, amp2, p_2, 'amp 2'),
-#                           num_bins_2_c, bin_range_2_c, amp2, p_2_c, 'amp 2')
+plotting_with_calibration(plotting(num_bins_2, bin_range_2, amp2, p_2, 'amp 2'),
+                          num_bins_2_c, bin_range_2_c, amp2, p_2_c, 'amp 2')
 
 # graph 3
 num_bins_3=40
@@ -328,8 +327,8 @@ p_4=(100,50,150,0)        # myGauss(x, A, mean, width, base)
 num_bins_4_c=40
 bin_range_4_c=(-100, 100)
 p_4_c=(150, 10, 100, 0)        # myGauss(x, A, mean, width, base)
-# plotting_with_calibration(plotting(num_bins_4, bin_range_4, area2, p_4, 'area 2'),
-#                           num_bins_4_c, bin_range_4_c, area2, p_4_c, 'area 2')
+plotting_with_calibration(plotting(num_bins_4, bin_range_4, area2, p_4, 'area 2'),
+                          num_bins_4_c, bin_range_4_c, area2, p_4_c, 'area 2')
 
 # graph 5
 num_bins_5=40
@@ -338,11 +337,15 @@ p_5=(60,10,5,0)        # myGauss(x, A, mean, width, base)
 num_bins_5_c=40
 bin_range_5_c=(2, 15)
 p_5_c=(300,10,5,0)        # myGauss(x, A, mean, width, base)
-# plotting_with_calibration(plotting(num_bins_5, bin_range_5, area3, p_5, 'area 2'),
-#                           num_bins_5_c, bin_range_5_c, area3, p_5_c, 'area 2')
+plotting_with_calibration(plotting(num_bins_5, bin_range_5, area3, p_5, 'area 3'),
+                          num_bins_5_c, bin_range_5_c, area3, p_5_c, 'area 3')
 
 # graph 6
-num_bins_6=80
+num_bins_6=40
 bin_range_6=(-5, 5)
 p_6=(800,0,1,0)        # myGauss(x, A, mean, width, base)
-# plotting(num_bins_6, bin_range_6, pulse_fit, p_6, 'amp 6')
+num_bins_6_c=40
+bin_range_6_c=(0, 20)
+p_6_c=(125,10,5,0)         # myGauss(x, A, mean, width, base)
+plotting_with_calibration(plotting(num_bins_6, bin_range_6, pulse_fit, p_6, 'pulse_fit'),
+                          num_bins_6_c, bin_range_6_c, pulse_fit, p_6_c, 'pulse_fit')
