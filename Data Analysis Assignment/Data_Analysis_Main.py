@@ -290,9 +290,9 @@ def plotting_with_calibration(popt1, num_bins1, bin_range1, amps, p, title, coun
           '   mu: ', "{:00.4f}".format(popt1[1]))
 
     plt.legend(loc=1)
+    if (save): plt.savefig(f'#{count} Calibrated {title}.png', dpi=mydpi)
     plt.show()
 
-    if (save): plt.savefig(f'#{count} Calibrated {title}.png', dpi=mydpi)
 
 # graph 1
 num_bins_1=60
