@@ -166,7 +166,7 @@ plotting(num_bins_1, bin_range_1, amp1, p_1, 'amp 1')
 
 # graph 2
 num_bins_2=25
-bin_range_2=(0.08, 0.4)
+bin_range_2=(0.15, 0.32)
 p_2=(230, 0.25, 0.1, 5)        # myGauss(x, A, mean, width, base)
 plotting(num_bins_2, bin_range_2, amp2, p_2, 'amp 2')
 
@@ -176,8 +176,23 @@ bin_range_3=(-100, 100)
 p_3=(200,0,100,5)        # myGauss(x, A, mean, width, base)
 plotting(num_bins_3, bin_range_3, area1, p_3, 'amp 3')
 
+# graph 4
+num_bins_4=40
+bin_range_4=(-200, 200)
+p_4=(100,50,150,0)        # myGauss(x, A, mean, width, base)
+plotting(num_bins_4, bin_range_4, area2, p_4, 'amp 4')
 
+# graph 5
+num_bins_5=80
+bin_range_5=(-50, 80)
+p_5=(300,21,50,0)        # myGauss(x, A, mean, width, base)
+plotting(num_bins_5, bin_range_5, area3, p_5, 'amp 5')
 
+# graph 6
+num_bins_6=80
+bin_range_6=(-5, 5)
+p_6=(800,0,1,0)        # myGauss(x, A, mean, width, base)
+plotting(num_bins_6, bin_range_6, pulse_fit, p_6, 'amp 6')
 
 """
 Look how bad that chi-squared value (and associated probability) is!

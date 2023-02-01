@@ -268,7 +268,7 @@ MAIN((main(num_bins1, (0.2,0.4), amps[0],p))[:2], num_bins1, bin_range1, amps[0]
 # bin_range1 = (5,14) 
 # p=(100,0.1,0.4,5)
 # (a,b,c,d) = p
-# MAIN((main(num_bins1, (0,0.4), amps[5],p))[:2], num_bins1, bin_range1, amps[5], a,b,c,d)
+MAIN((main(num_bins1, (0,0.4), amps[5],p))[:2], num_bins1, bin_range1, amps[5], a,b,c,d)
 
 
 
