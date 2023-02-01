@@ -275,7 +275,7 @@ def plotting_with_calibration(popt1, num_bins1, bin_range1, amps, p, title):
 
     fontsize = 12
     plt.plot(x_bestfit1, y_bestfit1, label='Fit')
-    plt.title('calibration', title)
+    plt.title('calibration ' + title)
     plt.text(0.01, 140, r'$\mu$ = %3.2f mV'%(popt1[1]), fontsize=fontsize)
     # plt.text(0.01, 120, r'$\sigma$ = %3.2f mV'%(popt1[2]), fontsize=fontsize)
     # plt.text(0.01, 100, r'$\chi^2$/DOF=', fontsize=fontsize)
@@ -292,14 +292,26 @@ def plotting_with_calibration(popt1, num_bins1, bin_range1, amps, p, title):
     plt.legend(loc=1)
     plt.show()
 
-
+# graph 1
 num_bins_1=60
 bin_range_1=(0.25, 0.4)
 p_1=(60, 0.31, 0.07, 5)        # myGauss(x, A, mean, width, base)
 
-num_bins_1_c=40
-bin_range_1_c=(0, 20)
-p_1_c=(100, 10, 2, 0)        # myGauss(x, A, mean, width, base)
+num_bins_1_c=100
+bin_range_1_c=(-5, 5)
+p_1_c=(1000, 10, 2, 0)        # myGauss(x, A, mean, width, base)
 
 plotting_with_calibration(plotting(num_bins_1, bin_range_1, amp1, p_1, 'amp 1')[:2],
                           num_bins_1_c, bin_range_1_c, amp1, p_1_c, 'amp 1')
+
+# graph 2
+num_bins_2=45
+bin_range_2=(0.16, 0.33)
+p_2=(200, 0.23, 0.1, 7)        # myGauss(x, A, mean, width, base)
+
+num_bins_2_c=100
+bin_range_2_c=(0, 20)
+p_2_c=(1000, 10, 2, 0)        # myGauss(x, A, mean, width, base)
+
+plotting_with_calibration(plotting(num_bins_2, bin_range_2, amp2, p_2, 'amp 2')[:2],
+                          num_bins_2_c, bin_range_2_c, amp2, p_2_c, 'amp 2')
