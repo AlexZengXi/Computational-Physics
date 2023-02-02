@@ -40,7 +40,6 @@ with open("signal_p3.pkl","rb") as file:
     signal_data=pickle.load(file)
 
 
-
 pulse_template = pulse_shape(20,80)
 # plt.plot(pulse_template/2000, label='Pulse Template', color='r')
 # for itrace in range(10):
@@ -75,7 +74,6 @@ sig = np.full(len(noise_data['evt_0']), std)
 sig = np.where(sig==0, 1, sig)
 """
 calculating the std of the noise
-
 """
 
 xx=np.linspace(0, 4095, 4096)
@@ -195,7 +193,7 @@ p_4=(100,50,150,0)        # myGauss(x, A, mean, width, base)
 num_bins_5=80
 bin_range_5=(-50, 80)
 p_5=(300,21,50,0)        # myGauss(x, A, mean, width, base)
-# plotting(num_bins_5, bin_range_5, area3, p_5, 'amp 5')
+conv_5 = plotting(num_bins_5, bin_range_5, area3, p_5, 'amp 5')
 
 # graph 6
 num_bins_6=80
@@ -292,6 +290,8 @@ def plotting_with_calibration(popt1, num_bins1, bin_range1, amps, p, title, coun
     if (save): plt.savefig(f'#{count} Calibrated {title}.png', dpi=mydpi)
     plt.show()
 
+    return conv
+
 
 # graph 1
 num_bins_1=60
@@ -340,8 +340,8 @@ p_5=(60,15,6,0)        # myGauss(x, A, mean, width, base)
 num_bins_5_c=40
 bin_range_5_c=(2, 15)
 p_5_c=(100,10,4,0)        # myGauss(x, A, mean, width, base)
-# plotting_with_calibration(plotting(num_bins_5, bin_range_5, area3, p_5, 'area 3'),
-#                           num_bins_5_c, bin_range_5_c, area3, p_5_c, 'area 3', 5)
+conv_5 = plotting_with_calibration(plotting(num_bins_5, bin_range_5, area3, p_5, 'area 3'),
+                          num_bins_5_c, bin_range_5_c, area3, p_5_c, 'area 3', 5)
 
 # graph 6
 num_bins_6=40
@@ -350,8 +350,8 @@ p_6=(300,0.25,0.1,0)        # myGauss(x, A, mean, width, base)
 num_bins_6_c=45
 bin_range_6_c=(1, 19)
 p_6_c=(125,10,5,0)         # myGauss(x, A, mean, width, base)
-# plotting_with_calibration(plotting(num_bins_6, bin_range_6, pulse_fit, p_6, 'pulse_fit'),
-#                           num_bins_6_c, bin_range_6_c, pulse_fit, p_6_c, 'pulse_fit', 6)
+plotting_with_calibration(plotting(num_bins_6, bin_range_6, pulse_fit, p_6, 'pulse_fit'),
+                          num_bins_6_c, bin_range_6_c, pulse_fit, p_6_c, 'pulse_fit', 6)
 
 # sigmal: std (around 90%), mu: mean, chi2 (around 1)
 
@@ -361,27 +361,33 @@ Part 3
 '''
 stds = []
 for i in range(len(noise_data)):
-    stds.append(np.std(signal_data['evt_%i'%i]))
+    stds.append(np.std(noise_data['evt_%i'%i]))
 std = np.mean(stds)
-sig = np.full(len(signal_data['evt_0']), std)
+sig = np.full(len(noise_data['evt_0']), std)
 sig = np.where(sig==0, 1, sig)
-
+"""
+calculating the std of the noise
+"""
 
 for ievt in range(1000):
     current_data = signal_data['evt_%i'%ievt]
+    area3[ievt] = np.sum(current_data[1000:1100])
     popt, pcov = curve_fit(fit_pulse, xx, current_data,
                   sigma = sig, absolute_sigma=True)
     pulse_fit[ievt] = popt[0]
 pulse_fit*=1000
 
+# num_bins_f = num_bins_6_c
+# bin_range_f = bin_range_6_c
+# p_f = p_6_c
+
 num_bins_f = 40
-bin_range_f = (-50,50)
-p = [p_1_c, p_2_c, p_3_c, p_4_c, p_5_c, p_6_c]
+bin_range_f = (-0.05, 0.1)
+p_f = (120, 0.01, 0.1, 0)
 
-conv = plotting(num_bins_f, bin_range_f, amps[5],p[5], 'final testing')[0]
-amps[5] *= conv
+pulse_fit *= conv_5
 
-n1, bin_edges1, _ = plt.hist(amps[5], bins=num_bins_f, range=bin_range_f,\
+n1, bin_edges1, _ = plt.hist(pulse_fit, bins=num_bins_f, range=bin_range_f,\
                              color='k', histtype='step', label='Data')
 # This plots the histogram AND saves the counts and bin_edges for later use
 
@@ -400,7 +406,7 @@ plt.errorbar(bin_centers1, n1, yerr=sig1, fmt='none', c='k')
 # This adds errorbars to the histograms, where each uncertainty is sqrt(y)
 
 popt1, pcov1 = curve_fit(myGauss, bin_centers1, n1,
-             sigma = sig1, p0=p[5], absolute_sigma=True)
+             sigma = sig1, p0=p_f, absolute_sigma=True)
 
 n1_fit = myGauss(bin_centers1, *popt1)
 
