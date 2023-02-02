@@ -230,7 +230,7 @@ def plotting_with_calibration(popt1, num_bins1, bin_range1, amps, p, title, coun
     # This plots the histogram AND saves the counts and bin_edges for later use
 
     plt.xlabel('Energy Estimator: Maximum Value (mV)')
-    plt.ylabel('Events / %2.2f mV' % ((bin_range1[-1] - bin_range1[0]) / num_bins1));
+    plt.ylabel('Events / %2.2f keV' % ((bin_range1[-1] - bin_range1[0]) / num_bins1));
     plt.xlim(bin_range1)
     # If the legend covers some data, increase the plt.xlim value, maybe (0,0.5)
 
