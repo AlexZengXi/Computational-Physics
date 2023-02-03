@@ -155,9 +155,9 @@ def plotting(num_bins1, bin_range1, amps, p, title):
 
 
     # find smallest sigma
-    print('o_', title, ' chi2: ', "{:.4f}".format(1-chi2.cdf(chisquared1,dof1)),
-          '   sigma: ', "{:00.4f}".format(popt1[2]),
-          '   mu: ', "{:00.4f}".format(popt1[1]))
+    # print('o_', title, ' chi2: ', "{:.4f}".format(1-chi2.cdf(chisquared1,dof1)),
+    #       '   sigma: ', "{:00.4f}".format(popt1[2]),
+    #       '   mu: ', "{:00.4f}".format(popt1[1]))
     # sigmal: std (around 90%), mu: mean, chi2 (around 1)
 
     plt.legend(loc=1)
@@ -300,8 +300,8 @@ p_1=[60, 0.31, 0.07, 5]        # myGauss(x, A, mean, width, base)
 num_bins_1_c=35
 bin_range_1_c=(7, 13)
 p_1_c=[80, 10, 2, 0]        # myGauss(x, A, mean, width, base)
-# plotting_with_calibration(plotting(num_bins_1, bin_range_1, amp1, p_1, 'amp 1'),
-#                           num_bins_1_c, bin_range_1_c, amp1, p_1_c, 'amp 1', 1)
+plotting_with_calibration(plotting(num_bins_1, bin_range_1, amp1, p_1, 'amp 1'),
+                          num_bins_1_c, bin_range_1_c, amp1, p_1_c, 'amp 1', 1)
 
 # graph 2
 num_bins_2=35
@@ -310,8 +310,8 @@ p_2=(200, 0.23, 0.1, 7)        # myGauss(x, A, mean, width, base)
 num_bins_2_c=25
 bin_range_2_c=(8, 12)
 p_2_c=(50, 10, 2, 5)        # myGauss(x, A, mean, width, base)
-# plotting_with_calibration(plotting(num_bins_2, bin_range_2, amp2, p_2, 'amp 2'),
-#                           num_bins_2_c, bin_range_2_c, amp2, p_2_c, 'amp 2', 2)
+plotting_with_calibration(plotting(num_bins_2, bin_range_2, amp2, p_2, 'amp 2'),
+                          num_bins_2_c, bin_range_2_c, amp2, p_2_c, 'amp 2', 2)
 
 # graph 3
 num_bins_3=30
@@ -320,8 +320,8 @@ p_3=(40, 17, 10,0)        # myGauss(x, A, mean, width, base)
 num_bins_3_c=50
 bin_range_3_c=(-200, 200)
 p_3_c=(1, 10, 20, 0)        # myGauss(x, A, mean, width, base)
-# plotting_with_calibration(plotting(num_bins_3, bin_range_3, area1, p_3, 'area 1'),
-#                           num_bins_3_c, bin_range_3_c, area1, p_3_c, 'area 1', 3)
+plotting_with_calibration(plotting(num_bins_3, bin_range_3, area1, p_3, 'area 1'),
+                          num_bins_3_c, bin_range_3_c, area1, p_3_c, 'area 1', 3)
 
 # graph 4
 num_bins_4=40
@@ -340,8 +340,8 @@ p_5=(60,15,6,0)        # myGauss(x, A, mean, width, base)
 num_bins_5_c=40
 bin_range_5_c=(2, 15)
 p_5_c=(100,10,4,0)        # myGauss(x, A, mean, width, base)
-# conv_5 = plotting_with_calibration(plotting(num_bins_5, bin_range_5, area3, p_5, 'area 3'),
-#                           num_bins_5_c, bin_range_5_c, area3, p_5_c, 'area 3', 5)
+conv_5 = plotting_with_calibration(plotting(num_bins_5, bin_range_5, area3, p_5, 'area 3'),
+                          num_bins_5_c, bin_range_5_c, area3, p_5_c, 'area 3', 5)
 
 # graph 6
 num_bins_6=40
@@ -350,8 +350,8 @@ p_6=(300,0.25,0.1,0)        # myGauss(x, A, mean, width, base)
 num_bins_6_c=45
 bin_range_6_c=(1, 19)
 p_6_c=(125,10,5,0)         # myGauss(x, A, mean, width, base)
-# plotting_with_calibration(plotting(num_bins_6, bin_range_6, pulse_fit, p_6, 'pulse_fit'),
-#                           num_bins_6_c, bin_range_6_c, pulse_fit, p_6_c, 'pulse_fit', 6)
+plotting_with_calibration(plotting(num_bins_6, bin_range_6, pulse_fit, p_6, 'pulse_fit'),
+                          num_bins_6_c, bin_range_6_c, pulse_fit, p_6_c, 'pulse_fit', 6)
 
 # sigmal: std (around 90%), mu: mean, chi2 (around 1)
 
@@ -359,74 +359,75 @@ p_6_c=(125,10,5,0)         # myGauss(x, A, mean, width, base)
 '''
 Part 3 
 '''
-# stds = []
-# for i in range(len(noise_data)):
-#     stds.append(np.std(noise_data['evt_%i'%i]))
-# std = np.mean(stds)
-# sig = np.full(len(noise_data['evt_0']), std)
-# sig = np.where(sig==0, 1, sig)
-# """
-# calculating the std of the noise
-# """
-#
-# for ievt in range(1000):
-#     current_data = signal_data['evt_%i'%ievt]
-#     area3[ievt] = np.sum(current_data[1000:1100])
-#     popt, pcov = curve_fit(fit_pulse, xx, current_data,
-#                   sigma = sig, absolute_sigma=True)
-#     pulse_fit[ievt] = popt[0]
-# pulse_fit*=1000
-#
-# # num_bins_f = num_bins_6_c
-# # bin_range_f = bin_range_6_c
-# # p_f = p_6_c
-#
-# num_bins_f = 40
-# bin_range_f = (-0.05, 0.1)
-# p_f = (120, 0.01, 0.1, 0)
-#
-# pulse_fit *= conv_5
-#
-# n1, bin_edges1, _ = plt.hist(pulse_fit, bins=num_bins_f, range=bin_range_f,\
-#                              color='k', histtype='step', label='Data')
-# # This plots the histogram AND saves the counts and bin_edges for later use
-#
-# plt.xlabel('Energy Estimator: Maximum Value (keV)')
-# plt.ylabel('Events / %2.2f keV'%((bin_range_f[-1]-bin_range_f[0])/num_bins_f));
-# plt.xlim(bin_range_f)
-# # If the legend covers some data, increase the plt.xlim value, maybe (0,0.5)
-#
-# bin_centers1 = 0.5*(bin_edges1[1:]+bin_edges1[:-1])
-#
-# sig1 = np.sqrt(n1)
-# sig1=np.where(sig1==0, 1, sig1)
-# # The uncertainty on 0 count is 1, not 0. Replace all 0s with 1s.
-#
-# plt.errorbar(bin_centers1, n1, yerr=sig1, fmt='none', c='k')
-# # This adds errorbars to the histograms, where each uncertainty is sqrt(y)
-#
-# popt1, pcov1 = curve_fit(myGauss, bin_centers1, n1,
-#              sigma = sig1, p0=p_f, absolute_sigma=True)
-#
-# n1_fit = myGauss(bin_centers1, *popt1)
-#
-# chisquared1 = np.sum( ((n1 - n1_fit)/sig1 )**2)
-# dof1 = num_bins_f - len(popt1)
-#
-# x_bestfit1 = np.linspace(bin_edges1[0], bin_edges1[-1], 1000)
-# y_bestfit1 = myGauss(x_bestfit1, *popt1)
-#
-# fontsize=10
-# plt.plot(x_bestfit1, y_bestfit1, label='Fit')
-# # plt.text(0.01, 140, r'$\mu$ = %3.2f mV'%(popt1[1]), fontsize=fontsize)
-# # plt.text(0.01, 120, r'$\sigma$ = %3.2f mV'%(popt1[2]), fontsize=fontsize)
-# # plt.text(0.01, 100, r'$\chi^2$/DOF=', fontsize=fontsize)
-# # plt.text(0.01, 80, r'%3.2f/%i'%(chisquared1,dof1), fontsize=fontsize)
-# # plt.text(0.01, 60, r'$\chi^2$ prob.= %1.1f'%(1-chi2.cdf(chisquared1,dof1)), fontsize=fontsize)
-# plt.legend(loc=1)
-# plt.title('Final Signal Encoded')
-# plt.show()
-#
-# print('c_', 'final testing', ' chi2: ', "{:.4f}".format(1 - chi2.cdf(chisquared1, dof1)),
-#       '   sigma: ', "{:00.4f}".format(popt1[2]),
-#       '   mu: ', "{:00.4f}".format(popt1[1]))
+stds = []
+for i in range(len(noise_data)):
+    stds.append(np.std(noise_data['evt_%i'%i]))
+std = np.mean(stds)
+sig = np.full(len(noise_data['evt_0']), std)
+sig = np.where(sig==0, 1, sig)
+"""
+calculating the std of the noise
+"""
+
+for ievt in range(1000):
+    current_data = signal_data['evt_%i'%ievt]
+    area3[ievt] = np.sum(current_data[1000:1100])
+    popt, pcov = curve_fit(fit_pulse, xx, current_data,
+                  sigma = sig, absolute_sigma=True)
+    pulse_fit[ievt] = popt[0]
+pulse_fit*=1000
+
+# num_bins_f = num_bins_6_c
+# bin_range_f = bin_range_6_c
+# p_f = p_6_c
+
+num_bins_f = 40
+bin_range_f = (-0.05, 0.1)
+p_f = (120, 0.01, 0.1, 0)
+
+pulse_fit *= conv_5
+
+n1, bin_edges1, _ = plt.hist(pulse_fit, bins=num_bins_f, range=bin_range_f,\
+                             color='k', histtype='step', label='Data')
+# This plots the histogram AND saves the counts and bin_edges for later use
+
+plt.xlabel('Energy Estimator: Maximum Value (keV)')
+plt.ylabel('Events / %2.2f keV'%((bin_range_f[-1]-bin_range_f[0])/num_bins_f));
+plt.xlim(bin_range_f)
+# If the legend covers some data, increase the plt.xlim value, maybe (0,0.5)
+
+bin_centers1 = 0.5*(bin_edges1[1:]+bin_edges1[:-1])
+
+sig1 = np.sqrt(n1)
+sig1=np.where(sig1==0, 1, sig1)
+# The uncertainty on 0 count is 1, not 0. Replace all 0s with 1s.
+
+plt.errorbar(bin_centers1, n1, yerr=sig1, fmt='none', c='k')
+# This adds errorbars to the histograms, where each uncertainty is sqrt(y)
+
+popt1, pcov1 = curve_fit(myGauss, bin_centers1, n1,
+             sigma = sig1, p0=p_f, absolute_sigma=True)
+
+n1_fit = myGauss(bin_centers1, *popt1)
+
+chisquared1 = np.sum( ((n1 - n1_fit)/sig1 )**2)
+dof1 = num_bins_f - len(popt1)
+
+x_bestfit1 = np.linspace(bin_edges1[0], bin_edges1[-1], 1000)
+y_bestfit1 = myGauss(x_bestfit1, *popt1)
+
+fontsize=10
+plt.plot(x_bestfit1, y_bestfit1, label='Fit')
+# plt.text(0.01, 140, r'$\mu$ = %3.2f mV'%(popt1[1]), fontsize=fontsize)
+# plt.text(0.01, 120, r'$\sigma$ = %3.2f mV'%(popt1[2]), fontsize=fontsize)
+# plt.text(0.01, 100, r'$\chi^2$/DOF=', fontsize=fontsize)
+# plt.text(0.01, 80, r'%3.2f/%i'%(chisquared1,dof1), fontsize=fontsize)
+# plt.text(0.01, 60, r'$\chi^2$ prob.= %1.1f'%(1-chi2.cdf(chisquared1,dof1)), fontsize=fontsize)
+plt.legend(loc=1)
+plt.title('Final Signal Reconstruction')
+if (save): plt.savefig('#7 Final Signal Reconstruction.png', dpi=mydpi)
+plt.show()
+
+print('c_', 'final testing', ' chi2: ', "{:.4f}".format(1 - chi2.cdf(chisquared1, dof1)),
+      '   sigma: ', "{:00.4f}".format(popt1[2]),
+      '   mu: ', "{:00.4f}".format(popt1[1]))
