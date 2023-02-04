@@ -11,7 +11,7 @@ font = {'family' : 'DejaVu Sans',
 rc('font', **font)
 # This changes the fonts for all graphs to make them bigger.
 
-save=True # if True then we save images as files
+save=False # if True then we save images as files
 mydpi=300
 
 def myGauss(x, A, mean, width, base):
